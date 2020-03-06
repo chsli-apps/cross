@@ -1,0 +1,126 @@
+[{
+	"npi": "123456789",
+	"lastname": "Doe",
+	"firstname": "John",
+	"title": "MD",
+	"specialty": "Allergy",
+	"emrLink": "",
+	"emrDocLink": "",
+	"location": [{
+		"address1": "NY Allergy Asthma and Immunology PC",
+		"address2": "120 N Country Rd",
+		"city": "Port Jefferson",
+		"state": "NY",
+		"zip": "11777",
+		"phone": "(555) 555-5555",
+		"fax": "(555) 555-5556",
+		"lat": "45.5",
+		"lon": "47.8"
+	}, {
+		"address1": "Ear, Nose and Throat Associates of NY PC",
+		"address2": "120 S Country Rd",
+		"city": "Port Jefferson",
+		"state": "NY",
+		"zip": "11777",
+		"phone": "(666) 666-6666",
+		"fax": "(666) 666-6667",
+		"lat": "66.6",
+		"lon": "77.7"
+	}, {
+		"address1": "Allergy Place",
+		"address2": "120 S Broadway",
+		"city": "New York City",
+		"state": "NY",
+		"zip": "10043",
+		"phone": "(666) 666-6667",
+		"fax": "(666) 666-6668",
+		"lat": "616.6",
+		"lon": "717.7"
+	}, {
+		"address1": "Allergy Associates",
+		"address2": "120 Sagamore Rd",
+		"city": "Syosset",
+		"state": "NY",
+		"zip": "11791",
+		"phone": "(666) 666-6688",
+		"fax": "(666) 666-6689",
+		"lat": "661.6",
+		"lon": "771.7"
+	}]
+}, {
+	"npi": "987654321",
+	"lastname": "Hansen",
+	"firstname": "Sally",
+	"title": "MD",
+	"specialty": "Allergy",
+	"emrLink": "",
+	"emrDocLink": "",
+	"location": [{
+		"address1": "ProHealth Care Associates Allergy",
+		"address2": "245 Old Country Rd",
+		"city": "Melville",
+		"state": "NY",
+		"zip": "11747",
+		"phone": "(888) 888-8888",
+		"fax": "(888) 888-8889",
+		"lat": "88.8",
+		"lon": "99.9"
+	}]
+}, {
+	"npi": "123456798",
+	"lastname": "Hanson",
+	"firstname": "Alex",
+	"title": "MD",
+	"specialty": "Allergy",
+	"emrLink": "",
+	"emrDocLink": "",
+	"location": [{
+		"address1": "ProHealth Care Allergy",
+		"address2": "247 Old Country Rd",
+		"city": "Melville",
+		"state": "NY",
+		"zip": "11747",
+		"phone": "(888) 888-8887",
+		"fax": "(888) 888-8880",
+		"lat": "88.7",
+		"lon": "99.0"
+	}]
+}, {
+	"npi": "987456123",
+	"lastname": "Ritz",
+	"firstname": "Sally",
+	"title": "MD",
+	"specialty": "Allergy",
+	"emrLink": "",
+	"emrDocLink": "",
+	"location": [{
+		"address1": "ProCare Associates Allergy",
+		"address2": "65 Maplecrest Rd",
+		"city": "Hensonville",
+		"state": "NY",
+		"zip": "12439",
+		"phone": "(888) 888-7777",
+		"fax": "(888) 888-7779",
+		"lat": "188.8",
+		"lon": "199.9"
+	}]
+}, {
+	"npi": "123456781",
+	"lastname": "Trager",
+	"firstname": "William",
+	"title": "MD",
+	"specialty": "Adolescent Medicine",
+	"emrLink": "",
+	"emrDocLink": "",
+	"location": [{
+		"address1": "Adolescent and Young Adult Medicine",
+		"address2": "29 Barstow Rd, Ste 201",
+		"city": "Great Neck",
+		"state": "NY",
+		"zip": "11021",
+		"phone": "(888) 482-5400",
+		"fax": "(888) 482-5401",
+		"lat": "188.8",
+		"lon": "199.9"
+	}]
+}]
