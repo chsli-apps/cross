@@ -3,34 +3,6 @@ console.log("HELLOOO!");
 var jsonData = "";
 var activeWords = [];
 
-// async function loadFile(file) {
-//     data = await fetch(file);
-
-//     jsonData = JSON.parse(await data.text());
-    
-//     for (var x = 0; x < jsonData.length; x++) {
-//         var jsonObject = jsonData[x];
-//         for (var y = 0; y < jsonObject.location.length; y++) {
-//             jsonObjectLoc = jsonObject.location[y];
-//             if (!activeWords.includes(jsonObject.firstname + " " + jsonObject.lastname) && !activeWords.includes(jsonObject.lastname + ", " + jsonObject.firstname)) {
-//                 activeWords.push(jsonObject.firstname + " " + jsonObject.lastname);
-//                 activeWords.push(jsonObject.lastname + ", " + jsonObject.firstname);
-//             }
-//             if (!activeWords.includes(jsonObject.specialty)) {
-//                 activeWords.push(jsonObject.specialty);
-//             }
-//             if (!activeWords.includes(jsonObjectLoc.city)) {
-//                 activeWords.push(jsonObjectLoc.city);
-//             }
-//             if (!activeWords.includes(jsonObjectLoc.zip)) {
-//                 activeWords.push(jsonObjectLoc.zip);
-//             }
-//         }
-//     }
-// }
-
-// loadFile('mock_data.json');
-
 function loadJSON(callback) {
     var xmlObj = new XMLHttpRequest();
     xmlObj.overrideMimeType("application/json");
