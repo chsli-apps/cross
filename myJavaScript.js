@@ -46,7 +46,6 @@ function loadJSON(callback) {
 function init() {
     loadJSON( function(response) {
         jsonData = JSON.parse(response);
-        console.log(jsonData);
         for (var x = 0; x < jsonData.length; x++) {
             var jsonObject = jsonData[x];
             for (var y = 0; y < jsonObject.location.length; y++) {
@@ -55,8 +54,11 @@ function init() {
                     activeWords.push("name && " + jsonObject.firstname + " " + jsonObject.lastname);
                     activeWords.push("name && " + jsonObject.lastname + ", " + jsonObject.firstname);
                 }
-                if (!activeWords.includes("specialty && " + jsonObject.specialty)) {
-                    activeWords.push("specialty && " + jsonObject.specialty);
+                var specialList = jsonObject.specialty.split(", ");
+                for (var z = 0; z < specialList.length; z++){
+                    if (!activeWords.includes("specialty && " + specialList[z])) {
+                        activeWords.push("specialty && " + specialList[z]);
+                    }
                 }
                 if (!activeWords.includes("location && " + jsonObjectLoc.city)) {
                     activeWords.push("location && " + jsonObjectLoc.city);
