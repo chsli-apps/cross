@@ -1,7 +1,7 @@
 console.log("HELLOOO!");
 
 var jsonData = "";
-var activeWords = [];
+var autoCompleteWords = [];
 
 function loadJSON(callback) {
     var xmlObj = new XMLHttpRequest();
@@ -18,25 +18,26 @@ function loadJSON(callback) {
 function init() {
     loadJSON( function(response) {
         jsonData = JSON.parse(response);
-        for (var x = 0; x < jsonData.length; x++) {
-            var jsonObject = jsonData[x];
+        //providerInfo = jsonData.providerData; -> uncomment when mock data is updated to include providerData identifier
+        for (var x = 0; x < jsonData.length; x++) { // change to providerInfo when updated
+            var jsonObject = jsonData[x];   // change to providerInfo when updated
             for (var y = 0; y < jsonObject.location.length; y++) {
                 jsonObjectLoc = jsonObject.location[y];
-                if (!activeWords.includes("name && " + jsonObject.firstname + " " + jsonObject.lastname) && !activeWords.includes("name && " + jsonObject.lastname + ", " + jsonObject.firstname)) {
-                    activeWords.push("name && " + jsonObject.firstname + " " + jsonObject.lastname);
-                    activeWords.push("name && " + jsonObject.lastname + ", " + jsonObject.firstname);
+                if (!autoCompleteWords.includes("name && " + jsonObject.firstname + " " + jsonObject.lastname) && !autoCompleteWords.includes("name && " + jsonObject.lastname + ", " + jsonObject.firstname)) {
+                    autoCompleteWords.push("name && " + jsonObject.firstname + " " + jsonObject.lastname);
+                    autoCompleteWords.push("name && " + jsonObject.lastname + ", " + jsonObject.firstname);
                 }
                 var specialList = jsonObject.specialty.split(", ");
                 for (var z = 0; z < specialList.length; z++){
-                    if (!activeWords.includes("specialty && " + specialList[z])) {
-                        activeWords.push("specialty && " + specialList[z]);
+                    if (!autoCompleteWords.includes("specialty && " + specialList[z])) {
+                        autoCompleteWords.push("specialty && " + specialList[z]);
                     }
                 }
-                if (!activeWords.includes("location && " + jsonObjectLoc.city)) {
-                    activeWords.push("location && " + jsonObjectLoc.city);
+                if (!autoCompleteWords.includes("location && " + jsonObjectLoc.city)) {
+                    autoCompleteWords.push("location && " + jsonObjectLoc.city);
                 }
-                if (!activeWords.includes("location && " + jsonObjectLoc.zip)) {
-                    activeWords.push("location && " + jsonObjectLoc.zip);
+                if (!autoCompleteWords.includes("location && " + jsonObjectLoc.zip)) {
+                    autoCompleteWords.push("location && " + jsonObjectLoc.zip);
                 }
             }
         }
@@ -46,48 +47,39 @@ function init() {
 init();
 
 function autocomplete(inp, arr) {
-    /*the autocomplete function takes two arguments,
-    the text field element and an array of possible autocompleted values:*/
+    // the autocomplete function takes two arguments, the text field element and an array of possible autocompleted values
     var currentSelection;
-    /*execute a function when someone writes in the text field:*/
     inp.addEventListener("input", function(e) {
         var a, b, i, val = this.value;
-        /*close any already open lists of autocompleted values*/
         closeAllLists();
         if (!val) { return false;}
         currentSelection = -1;
-        /*create a DIV element that will contain the items (values):*/
+        // create a DIV element that will contain the items (values)
         a = document.createElement("DIV");
         a.setAttribute("id", this.id + "autocomplete-list");
         a.setAttribute("class", "autocomplete-items");
-        /*append the DIV element as a child of the autocomplete container:*/
         this.parentNode.appendChild(a);
-        /*for each item in the array...*/
+
         for (i = 0; i < arr.length; i++) {
-            /*check if the item starts with the same letters as the text field value:*/
+            // check if the item starts with the same letter as the search bar value
             var ampLocation = arr[i].indexOf("&&");
             var removeBeg = arr[i].substr(ampLocation + 3, arr[i].length);
             if (removeBeg.substr(0, val.length).toUpperCase() === val.toUpperCase()) {
-                /*create a DIV element for each matching element:*/
                 b = document.createElement("DIV");
-                /*make the matching letters bold:*/
+                // make the matching letters bold
                 b.innerHTML = "<strong>" + removeBeg.substr(0, val.length) + "</strong>";
                 b.innerHTML += removeBeg.substr(val.length);
-                /*insert a input field that will hold the current array item's value:*/
                 b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
-                /*execute a function when someone clicks on the item value (DIV element):*/
                 b.addEventListener("click", function(e) {
-                    /*insert the value for the autocomplete text field:*/
+                    // insert the value to autocomplete list
                     var inputData = this.getElementsByTagName("input")[0].value;
                     var ampLoc = inputData.indexOf("&&");
                     var removeBegin = inputData.substr(ampLoc + 3, inputData.length);
                     inp.value = removeBegin;
-                    a = document.getElementById("hidden-info");
-                    a.innerHTML = "<input type='hidden' id='myInput' value='" + this.getElementsByTagName("input")[0].value + "'>";
+                    aa = document.getElementById("hidden-info");
+                    aa.innerHTML = "<input type='hidden' id='myInput' value='" + this.getElementsByTagName("input")[0].value + "'>";
                     triggerSearch(document.getElementById("search"));
-                    //triggerSearch_NEW();
-                    /*close the list of autocompleted values,
-                    (or any other open lists of autocompleted values:*/
+
                     closeAllLists();
                 });
                 a.appendChild(b);
@@ -95,30 +87,25 @@ function autocomplete(inp, arr) {
         }
     });
 
-    /*execute a function presses a key on the keyboard:*/
     inp.addEventListener("keydown", function(e) {
         if (currentSelection != null) {
             var x = document.getElementById(this.id + "autocomplete-list");
             if (x) x = x.getElementsByTagName("div");
             if (e.keyCode == 40) {
-                /*If the arrow DOWN key is pressed,
-                increase the currentSelection variable:*/
+                // if the arrow DOWN key is pressed, increase the currentSelection variable
                 currentSelection++;
-                /*and and make the current item more visible:*/
                 addActive(x);
             }
             else if (e.keyCode == 38) { //up
-              /*If the arrow UP key is pressed,
-              decrease the currentSelection variable:*/
+              // if the arrow UP key is pressed, decrease the currentSelection variable
               currentSelection--;
-              /*and and make the current item more visible:*/
               addActive(x);
             }
             else if (e.keyCode == 13) {
-                /*If the ENTER key is pressed, prevent the form from being submitted,*/
+                // if the ENTER key is pressed, prevent the form from being submitted
                 e.preventDefault();
                 if (currentSelection > -1) {
-                    /*and simulate a click on the "active" item:*/
+                    // simulate a click on the "active" item
                     if (x) x[currentSelection].click();
                 }
             }
@@ -126,26 +113,23 @@ function autocomplete(inp, arr) {
     });
 
     function addActive(x) {
-        /*a function to classify an item as "active":*/
+        // a function to classify an item as "active"
         if (!x) return false;
-        /*start by removing the "active" class on all items:*/
         removeActive(x);
         if (currentSelection >= x.length) currentSelection = 0;
         if (currentSelection < 0) currentSelection = (x.length - 1);
-        /*add class "autocomplete-active":*/
+        // add class "autocomplete-active":
         x[currentSelection].classList.add("autocomplete-active");
     }
 
     function removeActive(x) {
-        /*a function to remove the "active" class from all autocomplete items:*/
+        // a function to remove the "active" class from all autocomplete items:
         for (var i = 0; i < x.length; i++) {
             x[i].classList.remove("autocomplete-active");
         }
     }
 
     function closeAllLists(elmnt) {
-        /*close all autocomplete lists in the document,
-        except the one passed as an argument:*/
         var x = document.getElementsByClassName("autocomplete-items");
         for (var i = 0; i < x.length; i++) {
             if (elmnt != x[i] && elmnt != inp) {
@@ -160,20 +144,19 @@ function searchbar() {
     node.addEventListener("keydown", function(event) { 
         if (event.key === "Enter") {
             a = document.getElementById("hidden-info");
-                    a.innerHTML = "<input type='hidden' id='myInput' value='other && " + node.value + "'>";
+            a.innerHTML = "<input type='hidden' id='myInput' value='other && " + node.value + "'>";
             triggerSearch(node);
-            // triggerSearch_NEW();
         } 
         else 
         if (event.keyCode != 38 || event.keyCode != 40){
             /*initiate the autocomplete function*/
-            autocomplete(document.getElementById("search"), activeWords);
+            autocomplete(document.getElementById("search"), autoCompleteWords);
         }
     }); 
 }
     
 function triggerSearch(nodeVal){
-    // clear search results table
+    // clear search results section
     document.getElementById("search-results-section").innerHTML = "";
     var header = document.getElementById("search-header");
     var divide = document.getElementById("line-break");
@@ -184,7 +167,6 @@ function triggerSearch(nodeVal){
         header.parentNode.removeChild(header);
         divide.parentNode.removeChild(divide);
         numDocs.parentNode.removeChild(numDocs);
-        //a.parentNode.removeChild(a);
     }
     
     event.preventDefault();
@@ -193,22 +175,21 @@ function triggerSearch(nodeVal){
         return obj1.firstname < obj2.firstname ? -1 : 1;
     });
 
-    var jsonString = JSON.stringify(sortedJson);
-    //console.log(jsonString);
     if (a != null) {
         var nodeValue = nodeVal.value;
         var ampLoc = a.value.indexOf("&&");
-        var begin = a.value.substr(0, ampLoc - 1);
-        if (begin === "specialty") {
+        var searchByKey = a.value.substr(0, ampLoc - 1);
+        // search based on the search key code
+        if (searchByKey === "specialty") {
             searchBySpecialty(sortedJson, nodeValue);
         } 
-        else if (begin === "name") {
+        else if (searchByKey === "name") {
             searchByName(sortedJson, nodeValue);
         }
-        else if (begin === "location") {
+        else if (searchByKey === "location") {
             searchByLocation(sortedJson, nodeValue);
         }
-        else if (begin === "other") {
+        else if (searchByKey === "other") {
             if (!searchByName(sortedJson, nodeValue)){
                 if (!searchBySpecialty(sortedJson, nodeValue)) {
                     searchByLocation(sortedJson, nodeValue);
@@ -248,7 +229,7 @@ function searchByName(sortedData, nodeVal) {
             
             document.getElementById("search-results-section").insertAdjacentHTML('beforeend', info);
 
-            // if the physician has more that one location listed, loop through to add to table
+            // if the physician has more that one location listed, loop through to add
             if (jsonObject.location.length > 1) {
                 if (document.getElementById("physician-results-" + x) != null) {
                     for (var y = 1; y < jsonObject.location.length; y++) {
@@ -267,7 +248,6 @@ function searchByName(sortedData, nodeVal) {
 
 function searchByLocation(sortedData, nodeVal) {
     var success = false;
-    // for every json object, check if search input is equal to any physicians first name, last name, first + last, last + first or specialty
     for (var x = 0; x < sortedData.length; x++) {
         var jsonObject = sortedData[x];
         // for each json object location, check if search input is equal to any physician location zip code or city
@@ -298,10 +278,9 @@ function searchByLocation(sortedData, nodeVal) {
 
 function searchBySpecialty(sortedData, nodeVal) {
     var success = false;
-    // for every json object, check if search input is equal to any physicians first name, last name, first + last, last + first or specialty
+    // for every json object, check if search input is equal specialty
     for (var x = 0; x < sortedData.length; x++) {        
         var jsonObject = sortedData[x];
-        // for each json object location, check if search input is equal to any physician location zip code or city
         var specialtyList = jsonObject.specialty.split(", ");
 
         specialtyList = specialtyList.map(function (item) {
@@ -317,7 +296,7 @@ function searchBySpecialty(sortedData, nodeVal) {
             
             document.getElementById("search-results-section").insertAdjacentHTML('beforeend', info);
 
-            // if the physician has more that one location listed, loop through to add to table
+            // if the physician has more that one location listed, loop through to add
             if (jsonObject.location.length > 1) {
                 if (document.getElementById("physician-results-" + x) != null) {
                     for (var y = 1; y < jsonObject.location.length; y++) {
@@ -334,8 +313,7 @@ function searchBySpecialty(sortedData, nodeVal) {
     return success;
 }
 
-
 function launchWindows(url1, url2) {
-    window.open(url1);
-    window.open(url2);
+    window.open(url1, "_target");
+    window.open(url2, "_target");
 } 
