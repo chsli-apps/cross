@@ -314,6 +314,6 @@ function searchBySpecialty(sortedData, nodeVal) {
 }
 
 function launchWindows(url1, url2) {
-    window.open(url1, "_target");
-    window.open(url2, "_target");
+    window.open(url1, "_new");
+    window.open(url2, "_new1");
 } 
