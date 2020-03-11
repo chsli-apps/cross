@@ -6,7 +6,7 @@ var autoCompleteWords = [];
 function loadJSON(callback) {
     var xmlObj = new XMLHttpRequest();
     xmlObj.overrideMimeType("application/json");
-    xmlObj.open('GET', 'mock_data.json');
+    xmlObj.open('GET', 'mock_data2.json');
     xmlObj.onreadystatechange = function () {
       if (xmlObj.readyState == 4 && xmlObj.status == "200") {
         callback(xmlObj.responseText);
@@ -18,9 +18,10 @@ function loadJSON(callback) {
 function init() {
     loadJSON( function(response) {
         jsonData = JSON.parse(response);
-        //providerInfo = jsonData.providerData; -> uncomment when mock data is updated to include providerData identifier
-        for (var x = 0; x < jsonData.length; x++) { // change to providerInfo when updated
-            var jsonObject = jsonData[x];   // change to providerInfo when updated
+        document.getElementById("last-updated-data").insertAdjacentText('afterbegin', 'Data Last Updated: ' + jsonData[0].runDateTime);
+        var providerData = jsonData[0].providerData; // -> uncomment when mock data is updated to include providerData identifier
+        for (var x = 0; x < providerData.length; x++) { // change to providerInfo when updated
+            var jsonObject = providerData[x];   // change to providerInfo when updated
             for (var y = 0; y < jsonObject.location.length; y++) {
                 jsonObjectLoc = jsonObject.location[y];
                 if (!autoCompleteWords.includes("name && " + jsonObject.firstname + " " + jsonObject.lastname) && !autoCompleteWords.includes("name && " + jsonObject.lastname + ", " + jsonObject.firstname)) {
