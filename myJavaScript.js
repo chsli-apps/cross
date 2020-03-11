@@ -171,7 +171,7 @@ function triggerSearch(nodeVal){
     
     event.preventDefault();
 
-    var sortedJson = jsonData.sort(function(obj1, obj2) {
+    var sortedJson = jsonData[0].providerData.sort(function(obj1, obj2) {
         return obj1.firstname < obj2.firstname ? -1 : 1;
     });
 
