@@ -136,13 +136,17 @@ function autocomplete(inp, arr) {
             x[i].parentNode.removeChild(x[i]);
             }
         }
-        }
-  }
+    }
+}
 
 function searchbar() {
     var node = document.getElementById("search");
     node.addEventListener("keydown", function(event) { 
-        if (event.keyCode != 38 || event.keyCode != 40){
+        if (event.keyCode != 38 || event.keyCode != 40) {
+            if (document.getElementById("note-for-user").innerHTML === "") {
+                // add note to user letting them know to select from drop-down list
+                document.getElementById("note-for-user").insertAdjacentHTML('afterbegin', '<p>Select an option from the drop-down list.</p>');
+            }
             // initiate the autocomplete function
             autocomplete(document.getElementById("search"), autoCompleteWords);
         }
@@ -151,6 +155,7 @@ function searchbar() {
     
 function triggerSearch(nodeVal){
     // clear search results section
+    document.getElementById("note-for-user").innerHTML = "";
     document.getElementById("search-results-section").innerHTML = "";
     var header = document.getElementById("search-header");
     var divide = document.getElementById("line-break");

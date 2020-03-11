@@ -183,6 +183,10 @@
         height: 55px;
         margin-bottom: 20px;
       }
+
+      #note-for-user {
+        margin-bottom: 20px;
+      }
       
     </style>
   </head>
@@ -192,7 +196,8 @@
     </div>
     <div id="main-search">
       <h2>CRO Scheduling Directory for IPA Providers</h2>
-      <label for="search">Search:</label>
+      <div id="note-for-user"></div>
+      <label for="serach">Search:</label>
       <input type="text" id="search" placeholder="Enter First Name, Last Name, Specialty, City, or Zip Code" onclick="searchbar()"></input>
       <input type="submit" value=">" onclick="triggerSearch(document.getElementById('search'))">
     </div>
