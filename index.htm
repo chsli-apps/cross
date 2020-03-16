@@ -15,7 +15,6 @@
       .physician-listing {
         margin: auto;
         background-color: #f1ebe5;
-        text-align: center;
         margin-bottom: 20px;
         padding: 20px 20px 20px 20px;
       }
@@ -35,16 +34,13 @@
       }
 
       .location {
-        width: 350px;
         display: inline-block;
         margin: auto;
       }
 
       @media screen and (max-width: 1044px) {
         .location {
-          width: 80%;
-          display: inline-block;
-          margin: auto;
+          width: 70%;
         }
       }
 
@@ -66,7 +62,7 @@
         background-color: white;
         border-color: #322a7e;
         border-radius: 8px;
-        width: 60%;
+        width: 25%;
       }
 
       input[type=submit] {
@@ -79,8 +75,14 @@
       }
 
       .buttons {
-        text-align: center;
-        margin: auto;
+        float: right;
+        vertical-align: top;
+        margin: 0;
+      }
+
+      #name-specialty {
+        display: inline;
+        vertical-align: top;
       }
 
       #main-search {
@@ -91,8 +93,9 @@
 
       .autocomplete-items {
         margin: auto;
-        width: 60%;
-        padding-left: 20px;
+        width: 25%;
+        padding-left: 37.3%;
+        position: absolute;
       }
 
       .autocomplete-items div {
@@ -100,6 +103,7 @@
         cursor: pointer;
         background-color: #fff; 
         border: 1px solid #d4d4d4;
+        text-align: left;
       }
 
       /*when hovering an item:*/
@@ -150,6 +154,7 @@
         color: rgba(36,32,44,.7);
         padding-top: 0;
         font-weight: 400;
+        display: inline;
       }
 
       h3 {
@@ -158,10 +163,11 @@
         font-size: 24px;
         color: #49157c;
         font-weight: 700;
+        display: inline;
       }
 
       h2 {
-        margin-bottom: 50px;
+        margin-bottom: 20px;
         color: #49157c;
       }
 
@@ -172,6 +178,10 @@
         border: none;
         height: 2px;
         margin-bottom: 20px;
+      }
+
+      #main-line-break {
+        width: 50%;
       }
 
       #buttons {
@@ -193,6 +203,11 @@
         top: 20px;
         right: 20px;
       }
+
+      #top-header {
+        width: 100%;
+        margin-bottom: 20px;
+      }
       
     </style>
   </head>
@@ -203,7 +218,8 @@
     </div>
     <div id="main-search">
       <h2>CRO Scheduling Directory for IPA Providers</h2>
-      <div id="note-for-user"></div>
+      <hr id="main-line-break">
+      <div id="note-for-user"><p>Enter a minimum of 3 characters, then select an option from the drop-down list.</p></div>
       <label for="serach">Search:</label>
       <input type="text" id="search" placeholder="Enter First Name, Last Name, Specialty, City, or Zip Code" onclick="searchbar()"></input>
       <input type="submit" value=">" onclick="triggerSearch(document.getElementById('search'))">

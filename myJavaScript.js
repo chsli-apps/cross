@@ -61,29 +61,32 @@ function autocomplete(inp, arr) {
         a.setAttribute("class", "autocomplete-items");
         this.parentNode.appendChild(a);
 
-        for (i = 0; i < arr.length; i++) {
-            // check if the item starts with the same letter as the search bar value
-            var ampLocation = arr[i].indexOf("&&");
-            var removeBeg = arr[i].substr(ampLocation + 3, arr[i].length);
-            if (removeBeg.substr(0, val.length).toUpperCase() === val.toUpperCase()) {
-                b = document.createElement("DIV");
-                // make the matching letters bold
-                b.innerHTML = "<strong>" + removeBeg.substr(0, val.length) + "</strong>";
-                b.innerHTML += removeBeg.substr(val.length);
-                b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
-                b.addEventListener("click", function(e) {
-                    // insert the value to autocomplete list
-                    var inputData = this.getElementsByTagName("input")[0].value;
-                    var ampLoc = inputData.indexOf("&&");
-                    var removeBegin = inputData.substr(ampLoc + 3, inputData.length);
-                    inp.value = removeBegin;
-                    aa = document.getElementById("hidden-info");
-                    aa.innerHTML = "<input type='hidden' id='myInput' value='" + this.getElementsByTagName("input")[0].value + "'>";
-                    triggerSearch(document.getElementById("search"));
-
-                    closeAllLists();
-                });
-                a.appendChild(b);
+        if (this.value.length >= 3){
+            for (i = 0; i < arr.length; i++) {
+                // check if the item starts with the same letter as the search bar value
+                var ampLocation = arr[i].indexOf("&&");
+                var removeBeg = arr[i].substr(ampLocation + 3, arr[i].length);
+                if (removeBeg.substr(0, val.length).toUpperCase() === val.toUpperCase()) {
+                    b = document.createElement("DIV");
+                    b.setAttribute("id", "list-item");
+                    // make the matching letters bold
+                    b.innerHTML = "<strong>" + removeBeg.substr(0, val.length) + "</strong>";
+                    b.innerHTML += removeBeg.substr(val.length);
+                    b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+                    b.addEventListener("click", function(e) {
+                        // insert the value to autocomplete list
+                        var inputData = this.getElementsByTagName("input")[0].value;
+                        var ampLoc = inputData.indexOf("&&");
+                        var removeBegin = inputData.substr(ampLoc + 3, inputData.length);
+                        inp.value = removeBegin;
+                        aa = document.getElementById("hidden-info");
+                        aa.innerHTML = "<input type='hidden' id='myInput' value='" + this.getElementsByTagName("input")[0].value + "'>";
+                        triggerSearch(document.getElementById("search"));
+    
+                        closeAllLists();
+                    });
+                    a.appendChild(b);
+                }
             }
         }
     });
@@ -144,10 +147,6 @@ function searchbar() {
     var node = document.getElementById("search");
     node.addEventListener("keydown", function(event) { 
         if (event.keyCode != 38 || event.keyCode != 40) {
-            if (document.getElementById("note-for-user").innerHTML === "") {
-                // add note to user letting them know to select from drop-down list
-                document.getElementById("note-for-user").insertAdjacentHTML('afterbegin', '<p>Select an option from the drop-down list.</p>');
-            }
             // initiate the autocomplete function
             autocomplete(document.getElementById("search"), autoCompleteWords);
         }
@@ -216,9 +215,9 @@ function searchByName(sortedData, nodeVal) {
                 success = true;
             // get the physicians first location listed
             jsonObjectLoc = jsonObject.location[0];
-            var info = '<div class="physician-listing"><div id="physician-results-' + x + '"><div><h3>' + jsonObject.firstname + ' ' + jsonObject.lastname + ', ' +  jsonObject.title + '</h3><br><h5>' + jsonObject.specialty + '</h5></div><div class="location" id="right-side"><p>' + 
+            var info = '<div class="physician-listing"><div id="physician-results-' + x + '"><section id="top-header"><div id="name-specialty"><div class="buttons"><button id="buttons" onclick="launchWindows(\'https://chsli.org\', \'https://mercymedicalcenter.chsli.org/\');">SCHED Login</button></div><h3>' + jsonObject.firstname + ' ' + jsonObject.lastname + ', ' +  jsonObject.title + '</h3><br><h5>' + jsonObject.specialty + '</h5></div></section></div><div class="location" id="right-side"><p>' + 
             jsonObjectLoc.address1 + '<br>' + jsonObjectLoc.address2 + '<br>' + jsonObjectLoc.city + ', ' + jsonObjectLoc.state + ' ' + jsonObjectLoc.zip + '</p><br><p><strong>Phone: </strong>' + jsonObjectLoc.phone + 
-            '<br><strong>Fax: </strong>' + jsonObjectLoc.fax + '</p></div></div><div class="buttons"><button id="buttons" onclick="launchWindows(\'https://chsli.org\', \'https://mercymedicalcenter.chsli.org/\');">SCHED Login</button></div></div>';
+            '<br><strong>Fax: </strong>' + jsonObjectLoc.fax + '</p></div></div></div>';
             
             document.getElementById("search-results-section").insertAdjacentHTML('beforeend', info);
 
@@ -257,9 +256,9 @@ function searchByLocation(sortedData, nodeVal) {
                 }
                 // otherwise, list the physician and the location
                 else {
-                    var info = '<div class="physician-listing"><div id="physician-results-' + x + '"><div><h3>' + jsonObject.firstname + ' ' + jsonObject.lastname + ', ' +  jsonObject.title + '</h3><br><h5>' + jsonObject.specialty + '</h5></div><div class="location" id="right-side"><p>' + 
+                    var info = '<div class="physician-listing"><div id="physician-results-' + x + '"><section id="top-header"><div id="name-specialty"><div class="buttons"><button id="buttons" onclick="launchWindows(\'https://www.chsli.org\', \'https://www.mercymedicalcenter.chsli.org/\');">SCHED Login</button></div><h3>' + jsonObject.firstname + ' ' + jsonObject.lastname + ', ' +  jsonObject.title + '</h3><br><h5>' + jsonObject.specialty + '</h5></div></section></div><div class="location" id="right-side"><p>' + 
                     jsonObject.location[y].address1 + '<br>' + jsonObject.location[y].address2 + '<br>' + jsonObject.location[y].city + ', ' + jsonObject.location[y].state + ' ' + jsonObject.location[y].zip + '</p><br><p><strong>Phone: </strong>' + jsonObject.location[y].phone + 
-                    '<br><strong>Fax: </strong>' + jsonObject.location[y].fax + '</p></div></div><div class="buttons"><button id="buttons" onclick="launchWindows(\'https://www.chsli.org\', \'https://www.mercymedicalcenter.chsli.org/\');">SCHED Login</button></div></div>';
+                    '<br><strong>Fax: </strong>' + jsonObject.location[y].fax + '</p></div></div></div>';
                             
                     document.getElementById("search-results-section").insertAdjacentHTML('beforeend', info);
                 }
@@ -283,9 +282,9 @@ function searchBySpecialty(sortedData, nodeVal) {
         if (specialtyList.includes(nodeVal.toUpperCase())) {
             success = true;
             jsonObjectLoc = jsonObject.location[0];
-            var info = '<div class="physician-listing"><div id="physician-results-' + x + '"><div><h3>' + jsonObject.firstname + ' ' + jsonObject.lastname + ', ' +  jsonObject.title + '</h3><br><h5>' + jsonObject.specialty + '</h5></div><div class="location" id="right-side"><p>' + 
+            var info = '<div class="physician-listing"><div id="physician-results-' + x + '"><section id="top-header"><div id="name-specialty"><div class="buttons"><button id="buttons" onclick="launchWindows(\'https://www.chsli.org\', \'https://www.mercymedicalcenter.chsli.org/\');">SCHED Login</button></div><h3>' + jsonObject.firstname + ' ' + jsonObject.lastname + ', ' +  jsonObject.title + '</h3><br><h5>' + jsonObject.specialty + '</h5></div></section><div class="location" id="right-side"><p>' + 
             jsonObjectLoc.address1 + '<br>' + jsonObjectLoc.address2 + '<br>' + jsonObjectLoc.city + ', ' + jsonObjectLoc.state + ' ' + jsonObjectLoc.zip + '</p><br><p><strong>Phone: </strong>' + jsonObjectLoc.phone + 
-            '<br><strong>Fax: </strong>' + jsonObjectLoc.fax + '</p></div></div><div class="buttons"><button id="buttons" onclick="launchWindows(\'https://www.chsli.org\', \'https://www.mercymedicalcenter.chsli.org/\');">SCHED Login</button></div></div>';
+            '<br><strong>Fax: </strong>' + jsonObjectLoc.fax + '</p></div></div></div>';
             
             document.getElementById("search-results-section").insertAdjacentHTML('beforeend', info);
 
