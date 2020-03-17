@@ -155,7 +155,6 @@ function searchbar() {
     
 function triggerSearch(nodeVal){
     // clear search results section
-    document.getElementById("note-for-user").innerHTML = "";
     document.getElementById("search-results-section").innerHTML = "";
     var header = document.getElementById("search-header");
     var divide = document.getElementById("line-break");
