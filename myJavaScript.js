@@ -214,9 +214,9 @@ function searchByName(sortedData, nodeVal) {
                 success = true;
             // get the physicians first location listed
             jsonObjectLoc = jsonObject.location[0];
-            var info = '<div class="physician-listing"><div id="physician-results-' + x + '"><section id="top-header"><div id="name-specialty"><div class="buttons"><button id="buttons" onclick="launchWindows(\'https://chsli.org\', \'https://mercymedicalcenter.chsli.org/\');">SCHED Login</button></div><h3>' + jsonObject.firstname + ' ' + jsonObject.lastname + ', ' +  jsonObject.title + '</h3><br><h5>' + jsonObject.specialty + '</h5></div></section></div><div class="location" id="right-side"><p>' + 
+            var info = '<div class="physician-listing"><div id="physician-results-' + x + '"><section id="top-header"><div id="name-specialty"><div class="buttons"><button id="buttons" onclick="launchWindows(\'https://chsli.org\', \'https://mercymedicalcenter.chsli.org/\');">SCHED Login</button></div><h3>' + jsonObject.firstname + ' ' + jsonObject.lastname + ', ' +  jsonObject.title + '</h3><br><h5>' + jsonObject.specialty + '</h5></div></section><div id="locations"><div class="location" id="right-side"><p>' + 
             jsonObjectLoc.address1 + '<br>' + jsonObjectLoc.address2 + '<br>' + jsonObjectLoc.city + ', ' + jsonObjectLoc.state + ' ' + jsonObjectLoc.zip + '</p><br><p><strong>Phone: </strong>' + jsonObjectLoc.phone + 
-            '<br><strong>Fax: </strong>' + jsonObjectLoc.fax + '</p></div></div></div>';
+            '<br><strong>Fax: </strong>' + jsonObjectLoc.fax + '</p></div></div></div></div></div>';
             
             document.getElementById("search-results-section").insertAdjacentHTML('beforeend', info);
 
@@ -228,7 +228,7 @@ function searchByName(sortedData, nodeVal) {
                         jsonObject.location[y].city + ', ' + jsonObject.location[y].state + ' ' + jsonObject.location[y].zip + '</p><br><p><strong>Phone: </strong>' + 
                         jsonObject.location[y].phone + '<br><strong>Fax: </strong>' + jsonObject.location[y].fax + '</p></div>';
                                     
-                        document.getElementById("physician-results-" + x).insertAdjacentHTML('beforeend', info);
+                        document.getElementById("locations").insertAdjacentHTML('beforeend', info);
                     }
                 }
             }
@@ -255,7 +255,7 @@ function searchByLocation(sortedData, nodeVal) {
                 }
                 // otherwise, list the physician and the location
                 else {
-                    var info = '<div class="physician-listing"><div id="physician-results-' + x + '"><section id="top-header"><div id="name-specialty"><div class="buttons"><button id="buttons" onclick="launchWindows(\'https://www.chsli.org\', \'https://www.mercymedicalcenter.chsli.org/\');">SCHED Login</button></div><h3>' + jsonObject.firstname + ' ' + jsonObject.lastname + ', ' +  jsonObject.title + '</h3><br><h5>' + jsonObject.specialty + '</h5></div></section></div><div class="location" id="right-side"><p>' + 
+                    var info = '<div class="physician-listing"><div id="physician-results-' + x + '"><section id="top-header"><div id="name-specialty"><div class="buttons"><button id="buttons" onclick="launchWindows(\'https://www.chsli.org\', \'https://mercymedicalcenter.chsli.org/\');">SCHED Login</button></div><h3>' + jsonObject.firstname + ' ' + jsonObject.lastname + ', ' +  jsonObject.title + '</h3><br><h5>' + jsonObject.specialty + '</h5></div></section></div><div class="location" id="right-side"><p>' + 
                     jsonObject.location[y].address1 + '<br>' + jsonObject.location[y].address2 + '<br>' + jsonObject.location[y].city + ', ' + jsonObject.location[y].state + ' ' + jsonObject.location[y].zip + '</p><br><p><strong>Phone: </strong>' + jsonObject.location[y].phone + 
                     '<br><strong>Fax: </strong>' + jsonObject.location[y].fax + '</p></div></div></div>';
                             
@@ -281,7 +281,7 @@ function searchBySpecialty(sortedData, nodeVal) {
         if (specialtyList.includes(nodeVal.toUpperCase())) {
             success = true;
             jsonObjectLoc = jsonObject.location[0];
-            var info = '<div class="physician-listing"><div id="physician-results-' + x + '"><section id="top-header"><div id="name-specialty"><div class="buttons"><button id="buttons" onclick="launchWindows(\'https://www.chsli.org\', \'https://www.mercymedicalcenter.chsli.org/\');">SCHED Login</button></div><h3>' + jsonObject.firstname + ' ' + jsonObject.lastname + ', ' +  jsonObject.title + '</h3><br><h5>' + jsonObject.specialty + '</h5></div></section><div class="location" id="right-side"><p>' + 
+            var info = '<div class="physician-listing"><div id="physician-results-' + x + '"><section id="top-header"><div id="name-specialty"><div class="buttons"><button id="buttons" onclick="launchWindows(\'https://www.chsli.org\', \'https://mercymedicalcenter.chsli.org/\');">SCHED Login</button></div><h3>' + jsonObject.firstname + ' ' + jsonObject.lastname + ', ' +  jsonObject.title + '</h3><br><h5>' + jsonObject.specialty + '</h5></div></section><div class="location" id="right-side"><p>' + 
             jsonObjectLoc.address1 + '<br>' + jsonObjectLoc.address2 + '<br>' + jsonObjectLoc.city + ', ' + jsonObjectLoc.state + ' ' + jsonObjectLoc.zip + '</p><br><p><strong>Phone: </strong>' + jsonObjectLoc.phone + 
             '<br><strong>Fax: </strong>' + jsonObjectLoc.fax + '</p></div></div></div>';
             

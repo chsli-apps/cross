@@ -29,6 +29,7 @@
         box-shadow: 0 2px 3px 0 rgba(0,0,0,.1);
         padding: 20px 20px 20px 20px;
         margin: 20px 20px 20px 20px;
+        display: inline-block;
       }
 
       .location {
@@ -189,7 +190,6 @@
         border-radius: 8px;
         width: 200px;
         height: 55px;
-        margin-bottom: 20px;
       }
 
       #note-for-user {
@@ -217,9 +217,13 @@
     <div id="main-search">
       <h2>CRO Scheduling System</h2>
       <hr id="main-line-break">
-      <div id="note-for-user"><p>Enter a minimum of 3 characters, then select an option from the drop-down list.</p></div>
+      <div id="note-for-user">
+        <p>Enter a minimum of 3 characters, then select an option from the drop-down list.</p>
+        <br>
+        <p>Search by First Name, Last Name, Specialty, City, or Zip Code</p>
+      </div>
       <label for="serach">Search:</label>
-      <input type="text" id="search" placeholder="Enter First Name, Last Name, Specialty, City, or Zip Code" onclick="searchbar()"></input>
+      <input type="text" id="search" onclick="searchbar()"></input>
       <input type="submit" value=">" onclick="triggerSearch(document.getElementById('search'))">
     </div>
     <div id="search-results">
