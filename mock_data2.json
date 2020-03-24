@@ -20,6 +20,26 @@
 				"lat": "-48.822381",
 				"lon": "-85.45668"
 			}]
+		},{
+			"npi": "1111111111",
+			"lastname": "Schwartz",
+			"firstname": "Schmidt",
+			"title": "MD",
+			"specialty": "Allergy and Immunology",
+			"emrLink": "",
+			"emrDocLink": "",
+			"loyalty": "",
+			"location": [{
+				"address1": "ENTROFLEX",
+				"address2": "962 Greenwood Avenue",
+				"city": "Groveville",
+				"state": "Idaho",
+				"zip": "22749",
+				"phone": "(943) 573-2339",
+				"fax": "(892) 523-2065",
+				"lat": "-48.822381",
+				"lon": "-85.45668"
+			}]
 		},
 		{
 			"npi": "847784551",

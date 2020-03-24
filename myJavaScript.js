@@ -24,14 +24,14 @@ function init() {
         var providerData = jsonData[0].providerData; // -> uncomment when mock data is updated to include providerData identifier
         for (var x = 0; x < providerData.length; x++) { // change to providerData when updated
             var jsonObject = providerData[x];   // change to providerInfo when updated
-            if (!autoCompleteWords.includes("start " + jsonObject.firstname[0] + " physicianName && " + jsonObject.firstname + " " + jsonObject.lastname) && !autoCompleteWords.includes("start " + jsonObject.lastname[0] + " physicianName && " + jsonObject.lastname + ", " + jsonObject.firstname)) {
-                autoCompleteWords.push("start " + jsonObject.firstname[0] + " physicianName && " + jsonObject.firstname + " " + jsonObject.lastname);
-                autoCompleteWords.push("start " + jsonObject.lastname[0] + " physicianName && " + jsonObject.lastname + ", " + jsonObject.firstname);
+            if (!autoCompleteWords.includes("start " + jsonObject.firstname[0] + " physicianName && " + jsonObject.firstname + " " + jsonObject.lastname)) { //&& !autoCompleteWords.includes("start " + jsonObject.lastname[0] + " physicianName && " + jsonObject.lastname + ", " + jsonObject.firstname)) {
+                autoCompleteWords.push("start " + jsonObject.firstname[0] + " " + jsonObject.lastname[0] + " physicianName && " + jsonObject.firstname + " " + jsonObject.lastname);
+                //autoCompleteWords.push("start " + jsonObject.lastname[0] + " physicianName && " + jsonObject.lastname + ", " + jsonObject.firstname);
             }
             for (var y = 0; y < jsonObject.location.length; y++) {
                 jsonObjectLoc = jsonObject.location[y];
-                if (!autoCompleteWords.includes("start " + jsonObjectLoc.address1[0] + " practiceName && " + jsonObjectLoc.address1)) {
-                    autoCompleteWords.push("start " + jsonObjectLoc.address1[0] + " practiceName && " + jsonObjectLoc.address1);
+                if (!autoCompleteWords.includes("start " + jsonObjectLoc.address1[0] + " - practiceName && " + jsonObjectLoc.address1)) {
+                    autoCompleteWords.push("start " + jsonObjectLoc.address1[0] + " - practiceName && " + jsonObjectLoc.address1);
                 }
             }
         }
@@ -41,6 +41,9 @@ function init() {
 init();
 
 function autocomplete(inp, arr) {
+
+    // TODO: SCROLL DOWN/UP IN DIV WHEN ARROW KEYS ARE USED
+
     // the autocomplete function takes two arguments, the text field element and an array of possible autocompleted values
     var currentSelection;
     inp.addEventListener("input", function(e) {
@@ -59,18 +62,29 @@ function autocomplete(inp, arr) {
         }
 
         if (this.value.length >= 3){
+            var z = document.createElement("DIV");
+            z.setAttribute("id", "list-location");
+            z.innerHTML = "<p>Practice:</p>";
+            a.appendChild(z);
+
+            var y = document.createElement("DIV");
+            y.setAttribute("id", "list-physician");
+            y.innerHTML = "<p>Physician:</p>";
+            a.appendChild(y);
             for (i = 0; i < arr.length; i++) {
                 // check if the item starts with the same letter as the search bar value
                 var ampLocation = arr[i].indexOf("&&");
                 var removeBeg = arr[i].substr(ampLocation + 3, arr[i].length);
-                var searchByKey = arr[i].substring(8, ampLocation-1);
+                var splitWords = removeBeg.split(" ");
+                var lastWord = splitWords[splitWords.length - 1];
+                var searchByKey = arr[i].substring(10, ampLocation-1);
                 if (removeBeg.substr(0, val.length).toUpperCase() === val.toUpperCase()) {
                     b = document.createElement("DIV");
                     b.setAttribute("id", "list-item");
                     // make the matching letters bold
                     b.innerHTML = "<strong>" + removeBeg.substr(0, val.length) + "</strong>";
                     b.innerHTML += removeBeg.substr(val.length);
-                    b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+                    b.innerHTML += "<input type='hidden' value='" + arr[i] + "' id='" + arr[i] + "'>";
                     b.addEventListener("click", function(e) {
                         // insert the value to autocomplete list
                         var inputData = this.getElementsByTagName("input")[0].value;
@@ -83,8 +97,55 @@ function autocomplete(inp, arr) {
     
                         closeAllLists();
                     });
-                    a.appendChild(b);
+                    if (searchByKey == "practiceName") {
+                        z.appendChild(b);
+                    }
+                    else if (searchByKey == "physicianName") {
+                        y.appendChild(b);
+                    }
                 }
+                if (lastWord != splitWords[0] && document.getElementById("'" + arr[i] + "'") == null) {
+                    if (lastWord.substr(0, val.length).toUpperCase() === val.toUpperCase()) {
+                        b = document.createElement("DIV");
+                        b.setAttribute("id", "list-item");
+                        // make the matching letters bold
+                        b.innerHTML = removeBeg.substring(0, removeBeg.length - lastWord.length) + " " + "<strong>" + lastWord.substr(0, val.length) + "</strong>";
+                        b.innerHTML += lastWord.substr(val.length);
+                        b.innerHTML += "<input type='hidden' value='" + arr[i] + "' id='" + arr[i] + "'>";
+                        b.addEventListener("click", function(e) {
+                            // insert the value to autocomplete list
+                            var inputData = this.getElementsByTagName("input")[0].value;
+                            var ampLoc = inputData.indexOf("&&");
+                            var removeBegin = inputData.substr(ampLoc + 3, inputData.length);
+                            inp.value = removeBegin;
+                            aa = document.getElementById("hidden-info");
+                            aa.innerHTML = "<input type='hidden' id='myInput' value='" + this.getElementsByTagName("input")[0].value + "'>";
+                            triggerSearch(document.getElementById("search"));
+        
+                            closeAllLists();
+                        });
+                        if (searchByKey == "practiceName") {
+                            z.appendChild(b);
+                        }
+                        else if (searchByKey == "physicianName") {
+                            y.appendChild(b);
+                        }
+                    }
+                }
+            }
+            if (document.getElementById("list-physician").childElementCount
+            + document.getElementById("list-location").childElementCount > 6 ) {
+                document.getElementById("searchautocomplete-list").style.overflowY = 'scroll';
+            }
+            if (document.getElementById("list-item") == null) {
+                a.removeChild(y);
+                z.innerHTML = "<p>No matching search results.</p>";
+            }
+            else if (document.getElementById("list-location").childElementCount == 1) {
+                a.removeChild(z);
+            }
+            else if (document.getElementById("list-physician").childElementCount == 1) {
+                a.removeChild(y);
             }
         }
     });
@@ -96,11 +157,17 @@ function autocomplete(inp, arr) {
             if (e.keyCode == 40) {
                 // if the arrow DOWN key is pressed, increase the currentSelection variable
                 currentSelection++;
+                if (x[currentSelection].id == "list-location" || x[currentSelection].id == "list-physician") {
+                    currentSelection++;
+                }
                 addActive(x);
             }
             else if (e.keyCode == 38) { //up
               // if the arrow UP key is pressed, decrease the currentSelection variable
               currentSelection--;
+              if (x[currentSelection].id == "list-location" || x[currentSelection].id == "list-physician") {
+                currentSelection--;
+            }
               addActive(x);
             }
             else if (e.keyCode == 13) {
@@ -144,8 +211,9 @@ function autocomplete(inp, arr) {
 function filterAutoCompleteWords(start) {
     filteredAutoCompleteWords = [];
     for (var s = 0; s < autoCompleteWords.length; s++) {
-        var wordStart = autoCompleteWords[s].charAt(6);
-        if (start == wordStart) {
+        var firstNameStart = autoCompleteWords[s].charAt(6);
+        var lastNameStart = autoCompleteWords[s].charAt(8);
+        if (start.toUpperCase() == firstNameStart.toUpperCase() || start.toUpperCase() == lastNameStart.toUpperCase()) {
             filteredAutoCompleteWords.push(autoCompleteWords[s]);
         }
     }
@@ -179,7 +247,7 @@ function triggerSearch(nodeVal){
     if (a != null) {
         var nodeValue = nodeVal.value;
         var ampLoc = a.value.indexOf("&&");
-        var searchByKey = a.value.substring(8, ampLoc-1);
+        var searchByKey = a.value.substring(10, ampLoc-1);
         // search based on the search key code
     
         if (searchByKey === "physicianName") {
@@ -241,7 +309,7 @@ function searchByPracticeName(sortedData, nodeVal) {
         var jsonObject = sortedData[x];
         // for each json object location, check if search input is equal to any physician location zip code or city
         for (var y = 0; y < jsonObject.location.length; y++) {
-            if (nodeVal.toUpperCase() === jsonObject.location[y].city.toUpperCase() || nodeVal === jsonObject.location[y].zip) {
+            if (nodeVal.toUpperCase() === jsonObject.location[y].address1.toUpperCase()) {
                 success = true;
                 // if the physician is already listed add the location to the physicians row in table
                 if (document.getElementById("physician-results-" + x) != null) {
