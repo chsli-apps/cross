@@ -2,6 +2,8 @@ console.log("HELLOOO!");
 
 var jsonData = "";
 var autoCompleteWords = [];
+var filteredAutoCompleteWords = [];
+
 
 function loadJSON(callback) {
     var xmlObj = new XMLHttpRequest();
@@ -20,25 +22,16 @@ function init() {
         jsonData = JSON.parse(response);
         document.getElementById("last-updated-data").insertAdjacentText('afterbegin', 'Data Last Updated: ' + jsonData[0].runDateTime);
         var providerData = jsonData[0].providerData; // -> uncomment when mock data is updated to include providerData identifier
-        for (var x = 0; x < providerData.length; x++) { // change to providerInfo when updated
+        for (var x = 0; x < providerData.length; x++) { // change to providerData when updated
             var jsonObject = providerData[x];   // change to providerInfo when updated
+            if (!autoCompleteWords.includes("start " + jsonObject.firstname[0] + " physicianName && " + jsonObject.firstname + " " + jsonObject.lastname) && !autoCompleteWords.includes("start " + jsonObject.lastname[0] + " physicianName && " + jsonObject.lastname + ", " + jsonObject.firstname)) {
+                autoCompleteWords.push("start " + jsonObject.firstname[0] + " physicianName && " + jsonObject.firstname + " " + jsonObject.lastname);
+                autoCompleteWords.push("start " + jsonObject.lastname[0] + " physicianName && " + jsonObject.lastname + ", " + jsonObject.firstname);
+            }
             for (var y = 0; y < jsonObject.location.length; y++) {
                 jsonObjectLoc = jsonObject.location[y];
-                if (!autoCompleteWords.includes("name && " + jsonObject.firstname + " " + jsonObject.lastname) && !autoCompleteWords.includes("name && " + jsonObject.lastname + ", " + jsonObject.firstname)) {
-                    autoCompleteWords.push("name && " + jsonObject.firstname + " " + jsonObject.lastname);
-                    autoCompleteWords.push("name && " + jsonObject.lastname + ", " + jsonObject.firstname);
-                }
-                var specialList = jsonObject.specialty.split(", ");
-                for (var z = 0; z < specialList.length; z++){
-                    if (!autoCompleteWords.includes("specialty && " + specialList[z])) {
-                        autoCompleteWords.push("specialty && " + specialList[z]);
-                    }
-                }
-                if (!autoCompleteWords.includes("location && " + jsonObjectLoc.city)) {
-                    autoCompleteWords.push("location && " + jsonObjectLoc.city);
-                }
-                if (!autoCompleteWords.includes("location && " + jsonObjectLoc.zip)) {
-                    autoCompleteWords.push("location && " + jsonObjectLoc.zip);
+                if (!autoCompleteWords.includes("start " + jsonObjectLoc.address1[0] + " practiceName && " + jsonObjectLoc.address1)) {
+                    autoCompleteWords.push("start " + jsonObjectLoc.address1[0] + " practiceName && " + jsonObjectLoc.address1);
                 }
             }
         }
@@ -61,11 +54,16 @@ function autocomplete(inp, arr) {
         a.setAttribute("class", "autocomplete-items");
         this.parentNode.appendChild(a);
 
+        if (this.value.length == 1) {
+            arr = filterAutoCompleteWords(this.value);
+        }
+
         if (this.value.length >= 3){
             for (i = 0; i < arr.length; i++) {
                 // check if the item starts with the same letter as the search bar value
                 var ampLocation = arr[i].indexOf("&&");
                 var removeBeg = arr[i].substr(ampLocation + 3, arr[i].length);
+                var searchByKey = arr[i].substring(8, ampLocation-1);
                 if (removeBeg.substr(0, val.length).toUpperCase() === val.toUpperCase()) {
                     b = document.createElement("DIV");
                     b.setAttribute("id", "list-item");
@@ -143,14 +141,19 @@ function autocomplete(inp, arr) {
     }
 }
 
-function searchbar() {
-    var node = document.getElementById("search");
-    node.addEventListener("keydown", function(event) { 
-        if (event.keyCode != 38 || event.keyCode != 40) {
-            // initiate the autocomplete function
-            autocomplete(document.getElementById("search"), autoCompleteWords);
+function filterAutoCompleteWords(start) {
+    filteredAutoCompleteWords = [];
+    for (var s = 0; s < autoCompleteWords.length; s++) {
+        var wordStart = autoCompleteWords[s].charAt(6);
+        if (start == wordStart) {
+            filteredAutoCompleteWords.push(autoCompleteWords[s]);
         }
-    }); 
+    }
+    return filteredAutoCompleteWords;
+}
+
+function searchbar() {
+    autocomplete(document.getElementById("search"), autoCompleteWords);
 }
     
 function triggerSearch(nodeVal){
@@ -176,16 +179,14 @@ function triggerSearch(nodeVal){
     if (a != null) {
         var nodeValue = nodeVal.value;
         var ampLoc = a.value.indexOf("&&");
-        var searchByKey = a.value.substr(0, ampLoc - 1);
+        var searchByKey = a.value.substring(8, ampLoc-1);
         // search based on the search key code
-        if (searchByKey === "specialty") {
-            searchBySpecialty(sortedJson, nodeValue);
-        } 
-        else if (searchByKey === "name") {
-            searchByName(sortedJson, nodeValue);
+    
+        if (searchByKey === "physicianName") {
+            searchByPhysicianName(sortedJson, nodeValue);
         }
-        else if (searchByKey === "location") {
-            searchByLocation(sortedJson, nodeValue);
+        else if (searchByKey === "practiceName") {
+            searchByPracticeName(sortedJson, nodeValue);
         }
     }
     
@@ -202,8 +203,7 @@ function triggerSearch(nodeVal){
     }
 }
 
-function searchByName(sortedData, nodeVal) {
-    var success = false;
+function searchByPhysicianName(sortedData, nodeVal) {
     for (var x = 0; x < sortedData.length; x++) {
         var jsonObject = sortedData[x];
         if (nodeVal.toUpperCase() === jsonObject.firstname.toUpperCase()
@@ -211,7 +211,7 @@ function searchByName(sortedData, nodeVal) {
             || nodeVal.toUpperCase() === jsonObject.firstname.toUpperCase() + " " + jsonObject.lastname.toUpperCase() 
             || nodeVal.toUpperCase() === jsonObject.lastname.toUpperCase() + ", " + jsonObject.firstname.toUpperCase()) {
             
-                success = true;
+            success = true;
             // get the physicians first location listed
             jsonObjectLoc = jsonObject.location[0];
             var info = '<div class="physician-listing"><div id="physician-results-' + x + '"><section id="top-header"><div id="name-specialty"><div class="buttons"><button id="buttons" onclick="launchWindows(\'https://chsli.org\', \'https://mercymedicalcenter.chsli.org/\');">SCHED Login</button></div><h3>' + jsonObject.firstname + ' ' + jsonObject.lastname + ', ' +  jsonObject.title + '</h3><br><h5>' + jsonObject.specialty + '</h5></div></section><div id="locations"><div class="location" id="right-side"><p>' + 
@@ -234,11 +234,9 @@ function searchByName(sortedData, nodeVal) {
             }
         }
     }
-    return success;
 }
 
-function searchByLocation(sortedData, nodeVal) {
-    var success = false;
+function searchByPracticeName(sortedData, nodeVal) {
     for (var x = 0; x < sortedData.length; x++) {
         var jsonObject = sortedData[x];
         // for each json object location, check if search input is equal to any physician location zip code or city
@@ -264,44 +262,6 @@ function searchByLocation(sortedData, nodeVal) {
             }
         }
     }
-    return success;
-}
-
-function searchBySpecialty(sortedData, nodeVal) {
-    var success = false;
-    // for every json object, check if search input is equal specialty
-    for (var x = 0; x < sortedData.length; x++) {        
-        var jsonObject = sortedData[x];
-        var specialtyList = jsonObject.specialty.split(", ");
-
-        specialtyList = specialtyList.map(function (item) {
-            return item.toUpperCase();
-        });
-
-        if (specialtyList.includes(nodeVal.toUpperCase())) {
-            success = true;
-            jsonObjectLoc = jsonObject.location[0];
-            var info = '<div class="physician-listing"><div id="physician-results-' + x + '"><section id="top-header"><div id="name-specialty"><div class="buttons"><button id="buttons" onclick="launchWindows(\'https://www.chsli.org\', \'https://mercymedicalcenter.chsli.org/\');">SCHED Login</button></div><h3>' + jsonObject.firstname + ' ' + jsonObject.lastname + ', ' +  jsonObject.title + '</h3><br><h5>' + jsonObject.specialty + '</h5></div></section><div class="location" id="right-side"><p>' + 
-            jsonObjectLoc.address1 + '<br>' + jsonObjectLoc.address2 + '<br>' + jsonObjectLoc.city + ', ' + jsonObjectLoc.state + ' ' + jsonObjectLoc.zip + '</p><br><p><strong>Phone: </strong>' + jsonObjectLoc.phone + 
-            '<br><strong>Fax: </strong>' + jsonObjectLoc.fax + '</p></div></div></div>';
-            
-            document.getElementById("search-results-section").insertAdjacentHTML('beforeend', info);
-
-            // if the physician has more that one location listed, loop through to add
-            if (jsonObject.location.length > 1) {
-                if (document.getElementById("physician-results-" + x) != null) {
-                    for (var y = 1; y < jsonObject.location.length; y++) {
-                        var info = '<div class="location" id="right-side"><p>' + jsonObject.location[y].address1 + '<br>' + jsonObject.location[y].address2 + '<br>' + 
-                        jsonObject.location[y].city + ', ' + jsonObject.location[y].state + ' ' + jsonObject.location[y].zip + '</p><br><p><strong>Phone: </strong>' + 
-                        jsonObject.location[y].phone + '<br><strong>Fax: </strong>' + jsonObject.location[y].fax + '</p></div>';
-                                    
-                        document.getElementById("physician-results-" + x).insertAdjacentHTML('beforeend', info);
-                    }
-                }
-            }
-        }
-    }
-    return success;
 }
 
 function launchWindows(url1, url2) {

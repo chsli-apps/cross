@@ -9,7 +9,7 @@
       #search-results-section {
         border-spacing: 50px;
         margin: auto;
-        width: 60%;
+        width: 70%;
       }
 
       .physician-listing {
@@ -17,10 +17,6 @@
         background-color: #f1ebe5;
         margin-bottom: 20px;
         padding: 20px 20px 20px 20px;
-      }
-
-      #main-image {
-        cursor: pointer;
       }
 
       #right-side {
@@ -61,6 +57,7 @@
         background-color: white;
         border-color: #322a7e;
         border-radius: 8px;
+        vertical-align: middle;
         width: 25%;
       }
 
@@ -88,13 +85,16 @@
         overflow: hidden;
         padding-right: 5px;
         text-align: center;
+        align-items: center;
       }
 
       .autocomplete-items {
         margin: auto;
         width: 25%;
-        padding-left: 37.3%;
         position: absolute;
+        left: 0;
+        right: 0;
+        padding-left: 52px;
       }
 
       .autocomplete-items div {
@@ -211,7 +211,7 @@
   </head>
   <body>
     <div id="main-logo">
-      <img id="main-image" src="./CHSLI_logo_smaller.png" onclick="window.location.reload();">
+      <img id="main-image" src="./CHSLI_logo_smaller.png">
       <p id="last-updated-data"></p>
     </div>
     <div id="main-search">
@@ -220,11 +220,10 @@
       <div id="note-for-user">
         <p>Enter a minimum of 3 characters, then select an option from the drop-down list.</p>
         <br>
-        <p>Search by First Name, Last Name, Specialty, City, or Zip Code</p>
+        <p>Search by First Name, Last Name, or Practice Name.</p>
       </div>
       <label for="search">Search:</label>
       <input type="text" id="search" onclick="searchbar()"></input>
-      <input type="submit" value=">" onclick="triggerSearch(document.getElementById('search'))">
     </div>
     <div id="search-results">
       <div class="physician-list">
