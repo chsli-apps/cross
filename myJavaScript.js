@@ -145,7 +145,7 @@ function filterAutoCompleteWords(start) {
     filteredAutoCompleteWords = [];
     for (var s = 0; s < autoCompleteWords.length; s++) {
         var wordStart = autoCompleteWords[s].charAt(6);
-        if (start == wordStart) {
+        if (start.toUpperCase() == wordStart.toUpperCase()) {
             filteredAutoCompleteWords.push(autoCompleteWords[s]);
         }
     }
