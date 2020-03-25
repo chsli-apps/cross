@@ -41,9 +41,6 @@ function init() {
 init();
 
 function autocomplete(inp, arr) {
-
-    // TODO: SCROLL DOWN/UP IN DIV WHEN ARROW KEYS ARE USED
-
     // the autocomplete function takes two arguments, the text field element and an array of possible autocompleted values
     var currentSelection;
     inp.addEventListener("input", function(e) {
@@ -157,17 +154,24 @@ function autocomplete(inp, arr) {
             if (e.keyCode == 40) {
                 // if the arrow DOWN key is pressed, increase the currentSelection variable
                 currentSelection++;
-                if (x[currentSelection].id == "list-location" || x[currentSelection].id == "list-physician") {
-                    currentSelection++;
+                if (x[currentSelection] == null) {
+                    currentSelection = 1;
+                }
+                if(x[currentSelection] != null) {
+                    if (x[currentSelection].id == "list-location" || x[currentSelection].id == "list-physician") {
+                        currentSelection++;
+                    }
                 }
                 addActive(x);
             }
             else if (e.keyCode == 38) { //up
               // if the arrow UP key is pressed, decrease the currentSelection variable
               currentSelection--;
-              if (x[currentSelection].id == "list-location" || x[currentSelection].id == "list-physician") {
-                currentSelection--;
-            }
+              if(x[currentSelection] != null) {
+                if (x[currentSelection].id == "list-location" || x[currentSelection].id == "list-physician") {
+                    currentSelection--;
+                }
+              }
               addActive(x);
             }
             else if (e.keyCode == 13) {
@@ -189,6 +193,7 @@ function autocomplete(inp, arr) {
         if (currentSelection < 0) currentSelection = (x.length - 1);
         // add class "autocomplete-active":
         x[currentSelection].classList.add("autocomplete-active");
+        x[currentSelection].scrollIntoView(false);
     }
 
     function removeActive(x) {
