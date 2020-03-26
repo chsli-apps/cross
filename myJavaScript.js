@@ -252,6 +252,8 @@ function triggerSearch(nodeVal){
         return obj1.firstname < obj2.firstname ? -1 : 1;
     });
 
+    document.getElementById("header").style.borderBottom = '1px solid #e5e5e5';
+
     if (a != null) {
         var nodeValue = nodeVal.value;
         var ampLoc = a.value.indexOf("&&");
