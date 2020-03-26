@@ -1,5 +1,8 @@
 console.log("HELLOOO!");
 
+var headerHeight = document.getElementById("header").clientHeight;
+document.getElementById("header-wrapper").style.height = headerHeight;
+
 var jsonData = "";
 var autoCompleteWords = [];
 var filteredAutoCompleteWords = [];

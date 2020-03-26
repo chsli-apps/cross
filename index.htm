@@ -52,13 +52,18 @@
         font-size: 16px;
       }
 
+      input[type=text]::placeholder {
+        font-size: 14px;
+        text-align: center;
+      }
+
       input[type=text] {
         cursor: text !important;
         background-color: white;
         border-color: #322a7e;
         border-radius: 8px;
-        vertical-align: middle;
-        width: 35%;
+        width: 29%;
+        margin-top: 10px;
       }
 
       input[type=submit] {
@@ -82,20 +87,21 @@
       }
 
       #main-search {
+        float: left;
         overflow: hidden;
-        padding-right: 5px;
         text-align: center;
         align-items: center;
+        width: 80%;
+        margin-bottom: 10px;
       }
 
       .autocomplete-items {
-        height: 250px;
         margin: auto;
-        width: 35%;
+        width: 20%;
         position: absolute;
         left: 0;
         right: 0;
-        padding-left: 52px;
+        padding-left: 110px;
       }
 
       .autocomplete-items div {
@@ -108,11 +114,7 @@
 
       /*when hovering an item:*/
       .autocomplete-items div:hover {
-        background-color: #cecece;
-      }
-
-      #list-location, #list-physician {
-        background-color: #e9e9e9;
+        background-color: #e9e9e9; 
       }
 
       /*when navigating through the items using the arrow keys:*/
@@ -123,6 +125,7 @@
 
       #search-results {
         margin: auto;
+        margin-top: 50px;
       }
 
       #search-header {
@@ -171,7 +174,7 @@
       }
 
       h2 {
-        margin-bottom: 20px;
+        margin-bottom: 10px;
         color: #49157c;
       }
 
@@ -181,11 +184,11 @@
         color:  #e5e5e5;
         border: none;
         height: 2px;
-        margin-bottom: 20px;
+        margin-bottom: 10px;
       }
 
       #main-line-break {
-        width: 50%;
+        width: 30%;
       }
 
       #buttons {
@@ -197,14 +200,11 @@
         height: 55px;
       }
 
-      #note-for-user {
-        margin-bottom: 20px;
-      }
-
-      #last-updated-data{
+      #last-updated-data {
         position: absolute;
-        top: 20px;
-        right: 20px;
+        height: 90px;
+        top: 10px;
+        right: 10px;
       }
 
       #top-header {
@@ -212,24 +212,53 @@
         margin-bottom: 20px;
       }
       
+      .left {
+        float: left;
+      }
+
+      .right {
+        float: right;
+      }
+
+      .right-side-header {
+        float: right;
+        width: 80%;
+      }
+
+      .header {
+        position: fixed;
+        text-align: center;
+        top: 0;
+        left: 0;
+        background-color: white;
+        width: 100%;
+      }
+      
     </style>
   </head>
   <body>
-    <div id="main-logo">
-      <img id="main-image" src="./CHSLI_logo_smaller.png">
-      <p id="last-updated-data"></p>
-    </div>
-    <div id="main-search">
-      <h2>CRO Scheduling System</h2>
-      <hr id="main-line-break">
-      <div id="note-for-user">
-        <p>Enter a minimum of 3 characters, then select an option from the drop-down list.</p>
-        <br>
-        <p>Search by First Name, Last Name, or Practice Name.</p>
+    <div class="header-wrapper" id="header-wrapper">
+    <div class="header" id="header">
+      <div id="main-logo" class="left">
+        <img id="main-image" src="./chsli_logo.png">
       </div>
-      <label for="search">Search:</label>
-      <input type="text" id="search" onclick="searchbar()"></input>
+      <div class="right-side-header">
+        <div id="main-search">
+          <h2>CRO Scheduling System</h2>
+          <hr id="main-line-break">
+          <div id="note-for-user">
+            <p>Enter a minimum of 3 characters, then select an option from the drop-down list.</p>
+          </div>
+          <label for="search">Search:</label>
+          <input type="text" id="search" onclick="searchbar()" placeholder="Enter physician or practice"></input>
+        </div>
+        <div id="updated-timestamp" class="right">
+          <p id="last-updated-data"></p>
+        </div>
+      </div>
     </div>
+  </div>
+
     <div id="search-results">
       <div class="physician-list">
         <div id="hidden-info"></div>
