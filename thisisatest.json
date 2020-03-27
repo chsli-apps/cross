@@ -122,5 +122,25 @@
                     "emrLink": "https://www.chsli.org",
 			        "emrDocLink": "https://mercymedicalcenter.chsli.org/"
 				}]
+		},{
+			"npi": "915381214",
+			"lastname": "Herman",
+			"firstname": "Herman",
+			"title": "MD", 
+			"specialty": "Allergy and Immunology",
+			"loyalty": "",
+			"location": [{
+				"address1": "TRASOLA",
+				"address2": "962 Greenwood Avenue",
+				"city": "Groveville",
+				"state": "Idaho",
+				"zip": "22749",
+				"phone": "(943) 573-2339",
+				"fax": "(892) 523-2065",
+				"lat": "-48.822381",
+                "lon": "-85.45668",
+                "emrLink": "https://www.chsli.org",
+                "emrDocLink": "https://mercymedicalcenter.chsli.org/"
+			}]
 		}]
 }]
