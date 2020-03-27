@@ -28,6 +28,10 @@
         display: inline-block;
       }
 
+      #location-info {
+        margin-bottom: 5px;
+      }
+
       .location {
         display: inline-block;
         margin: auto;
@@ -63,21 +67,6 @@
         border-radius: 8px;
         width: 29%;
         margin-top: 10px;
-      }
-
-      input[type=submit] {
-        background-color: DodgerBlue;
-        color: #fff;
-        cursor: pointer;
-        border-radius: 8px;
-        padding-left: 15px;
-        padding-right: 15px;
-      }
-
-      .buttons {
-        float: right;
-        vertical-align: top;
-        margin: 0;
       }
 
       #name-specialty {
@@ -124,7 +113,6 @@
 
       #search-results {
         margin: auto;
-        margin-top: 50px;
       }
 
       #search-header {
@@ -195,8 +183,17 @@
         color: #fff;
         cursor: pointer;
         border-radius: 8px;
-        width: 200px;
-        height: 55px;
+        width: 120px;
+        height: 45px;
+      }
+
+      #not-avail-button {
+        background-color: #919191;
+        color: #fff;
+        cursor: pointer;
+        border-radius: 8px;
+        width: 120px;
+        height: 45px;
       }
 
       #last-updated-data {
@@ -233,7 +230,22 @@
         width: 100%;
         padding-bottom: 20px;
       }
-      
+
+      label {
+        font-size: 16px;
+        color: rgba(36,32,44,.7);
+        padding-top: 0;
+        font-weight: 400;
+      }
+
+      #note-for-user {
+        margin-bottom: 7px;
+      }
+
+      #button-section {
+        text-align: center;
+      }
+
     </style>
   </head>
   <body>
@@ -249,6 +261,9 @@
           <div id="note-for-user">
             <p>Enter a minimum of 3 characters, then select an option from the drop-down list.</p>
           </div>
+          <input type="checkbox" id="providers-only"></input>
+          <label for="providers-only" style="font-size: 14px">Participating providers only</label>
+          <br>
           <label for="search">Search:</label>
           <input type="text" id="search" onclick="searchbar()" placeholder="Enter physician or practice"></input>
         </div>

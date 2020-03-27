@@ -6,12 +6,12 @@ document.getElementById("header-wrapper").style.height = headerHeight;
 var jsonData = "";
 var autoCompleteWords = [];
 var filteredAutoCompleteWords = [];
-
+var providerOnlyData = "";
 
 function loadJSON(callback) {
     var xmlObj = new XMLHttpRequest();
     xmlObj.overrideMimeType("application/json");
-    xmlObj.open('GET', 'mock_data2.json');
+    xmlObj.open('GET', 'thisisatest.json');
     xmlObj.onreadystatechange = function () {
       if (xmlObj.readyState == 4 && xmlObj.status == "200") {
         callback(xmlObj.responseText);
@@ -233,6 +233,26 @@ function searchbar() {
 }
     
 function triggerSearch(nodeVal){
+
+    if (document.getElementById("providers-only").checked) {
+        providerOnlyData = JSON.parse(JSON.stringify(jsonData));
+        var providerData = providerOnlyData[0].providerData;
+        for (var x = 0; x < providerData.length; x++) {
+            var jsonObject = providerData[x];
+            for (var y = 0; y < jsonObject.location.length; y++) {
+                jsonObjectLoc = jsonObject.location[y];
+                if (jsonObjectLoc.emrDocLink == "" && jsonObjectLoc.emrLink == "") {
+                    jsonObject.location.splice(y, 1);
+                    y -= 1;
+                }
+            }
+            if (jsonObject.location.length == 0) {
+                providerData.splice(x, 1);
+                x -= 1;
+            }
+        }
+    }
+
     // clear search results section
     document.getElementById("search-results-section").innerHTML = "";
     var header = document.getElementById("search-header");
@@ -248,9 +268,17 @@ function triggerSearch(nodeVal){
     
     event.preventDefault();
 
-    var sortedJson = jsonData[0].providerData.sort(function(obj1, obj2) {
-        return obj1.firstname < obj2.firstname ? -1 : 1;
-    });
+    if (providerOnlyData != "") {
+        var sortedJson = providerOnlyData[0].providerData.sort(function(obj1, obj2) {
+            return obj1.firstname < obj2.firstname ? -1 : 1;
+        });
+        providerOnlyData = "";
+    }
+    else {
+        var sortedJson = jsonData[0].providerData.sort(function(obj1, obj2) {
+            return obj1.firstname < obj2.firstname ? -1 : 1;
+        });
+    }
 
     document.getElementById("header").style.borderBottom = '1px solid #e5e5e5';
 
@@ -292,21 +320,41 @@ function searchByPhysicianName(sortedData, nodeVal) {
             success = true;
             // get the physicians first location listed
             jsonObjectLoc = jsonObject.location[0];
-            var info = '<div class="physician-listing"><div id="physician-results-' + x + '"><section id="top-header"><div id="name-specialty"><div class="buttons"><button id="buttons" onclick="launchWindows(\'https://chsli.org\', \'https://mercymedicalcenter.chsli.org/\');">SCHED Login</button></div><h3>' + jsonObject.firstname + ' ' + jsonObject.lastname + ', ' +  jsonObject.title + '</h3><br><h5>' + jsonObject.specialty + '</h5></div></section><div id="locations"><div class="location" id="right-side"><p>' + 
-            jsonObjectLoc.address1 + '<br>' + jsonObjectLoc.address2 + '<br>' + jsonObjectLoc.city + ', ' + jsonObjectLoc.state + ' ' + jsonObjectLoc.zip + '</p><br><p><strong>Phone: </strong>' + jsonObjectLoc.phone + 
-            '<br><strong>Fax: </strong>' + jsonObjectLoc.fax + '</p></div></div></div></div></div>';
+            if (jsonObjectLoc.emrLink == "" && jsonObjectLoc.emrDocLink == "") {
+                var info = '<div class="physician-listing"><div id="physician-results-' + x + '"><section id="top-header"><div id="name-specialty"><h3>' + jsonObject.firstname + ' ' + jsonObject.lastname + ', ' +  jsonObject.title + '</h3><br><h5>' + jsonObject.specialty + '</h5></div></section><div id="locations"><div class="location" id="right-side"><div id="location-info"><p>' + 
+                jsonObjectLoc.address1 + '<br>' + jsonObjectLoc.address2 + '<br>' + jsonObjectLoc.city + ', ' + jsonObjectLoc.state + ' ' + jsonObjectLoc.zip + '</p><br><p><strong>Phone: </strong>' + jsonObjectLoc.phone + 
+                '<br><strong>Fax: </strong>' + jsonObjectLoc.fax + '</p></div><div id="button-section"><button id="not-avail-button">SCHED Login</button></div></div></div></div></div>';
+                
+                document.getElementById("search-results-section").insertAdjacentHTML('beforeend', info);
+            }
+            else {
+                var info = '<div class="physician-listing"><div id="physician-results-' + x + '"><section id="top-header"><div id="name-specialty"><h3>' + jsonObject.firstname + ' ' + jsonObject.lastname + ', ' +  jsonObject.title + '</h3><br><h5>' + jsonObject.specialty + '</h5></div></section><div id="locations"><div class="location" id="right-side"><div id="location-info"><p>' + 
+                jsonObjectLoc.address1 + '<br>' + jsonObjectLoc.address2 + '<br>' + jsonObjectLoc.city + ', ' + jsonObjectLoc.state + ' ' + jsonObjectLoc.zip + '</p><br><p><strong>Phone: </strong>' + jsonObjectLoc.phone + 
+                '<br><strong>Fax: </strong>' + jsonObjectLoc.fax + '</p></div><div id="button-section"><button id="buttons" onclick="launchWindows(\'https://chsli.org\', \'https://mercymedicalcenter.chsli.org/\');">SCHED Login</button></div></div></div></div></div>';
+                
+                document.getElementById("search-results-section").insertAdjacentHTML('beforeend', info);
+            }
             
-            document.getElementById("search-results-section").insertAdjacentHTML('beforeend', info);
 
             // if the physician has more that one location listed, loop through to add
             if (jsonObject.location.length > 1) {
                 if (document.getElementById("physician-results-" + x) != null) {
                     for (var y = 1; y < jsonObject.location.length; y++) {
-                        var info = '<div class="location" id="right-side"><p>' + jsonObject.location[y].address1 + '<br>' + jsonObject.location[y].address2 + '<br>' + 
-                        jsonObject.location[y].city + ', ' + jsonObject.location[y].state + ' ' + jsonObject.location[y].zip + '</p><br><p><strong>Phone: </strong>' + 
-                        jsonObject.location[y].phone + '<br><strong>Fax: </strong>' + jsonObject.location[y].fax + '</p></div>';
+                        var jsonObjectLoc = jsonObject.location[y];
+                        if (jsonObjectLoc.emrLink == "" && jsonObjectLoc.emrDocLink == "") {
+                            var info = '<div class="location" id="right-side"><div id="location-info"><p>' + jsonObject.location[y].address1 + '<br>' + jsonObject.location[y].address2 + '<br>' + 
+                            jsonObject.location[y].city + ', ' + jsonObject.location[y].state + ' ' + jsonObject.location[y].zip + '</p><br><p><strong>Phone: </strong>' + 
+                            jsonObject.location[y].phone + '<br><strong>Fax: </strong>' + jsonObject.location[y].fax + '</p></div><div id="button-section"><button id="not-avail-button">SCHED Login</button></div></div>';
                                     
-                        document.getElementById("locations").insertAdjacentHTML('beforeend', info);
+                            document.getElementById("locations").insertAdjacentHTML('beforeend', info);
+                        }
+                        else {
+                            var info = '<div class="location" id="right-side"><div id="location-info"><p>' + jsonObject.location[y].address1 + '<br>' + jsonObject.location[y].address2 + '<br>' + 
+                            jsonObject.location[y].city + ', ' + jsonObject.location[y].state + ' ' + jsonObject.location[y].zip + '</p><br><p><strong>Phone: </strong>' + 
+                            jsonObject.location[y].phone + '<br><strong>Fax: </strong>' + jsonObject.location[y].fax + '</p></div><div id="button-section"><button id="buttons" onclick="launchWindows(\'https://chsli.org\', \'https://mercymedicalcenter.chsli.org/\');">SCHED Login</button></div></div>';
+                                    
+                            document.getElementById("locations").insertAdjacentHTML('beforeend', info);
+                        }
                     }
                 }
             }
@@ -319,23 +367,42 @@ function searchByPracticeName(sortedData, nodeVal) {
         var jsonObject = sortedData[x];
         // for each json object location, check if search input is equal to any physician location zip code or city
         for (var y = 0; y < jsonObject.location.length; y++) {
-            if (nodeVal.toUpperCase() === jsonObject.location[y].address1.toUpperCase()) {
+            jsonObjectLoc = jsonObject.location[y];
+            if (nodeVal.toUpperCase() === jsonObjectLoc.address1.toUpperCase()) {
                 success = true;
                 // if the physician is already listed add the location to the physicians row in table
                 if (document.getElementById("physician-results-" + x) != null) {
-                    var info = '<div class="location" id="right-side"><p>' + jsonObject.location[y].address1 + '<br>' + jsonObject.location[y].address2 + '<br>' + 
-                    jsonObject.location[y].city + ', ' + jsonObject.location[y].state + ' ' + jsonObject.location[y].zip + '</p><br><p><strong>Phone: </strong>' + 
-                    jsonObject.location[y].phone + '<br><strong>Fax: </strong>' + jsonObject.location[y].fax + '</p></div>';
+                    if (jsonObjectLoc.emrLink == "" && jsonObjectLoc.emrDocLink == "") {
+                        var info = '<div class="location" id="right-side"><div id="location-info"><p>' + jsonObject.location[y].address1 + '<br>' + jsonObject.location[y].address2 + '<br>' + 
+                        jsonObject.location[y].city + ', ' + jsonObject.location[y].state + ' ' + jsonObject.location[y].zip + '</p><br><p><strong>Phone: </strong>' + 
+                        jsonObject.location[y].phone + '<br><strong>Fax: </strong>' + jsonObject.location[y].fax + '</p></div><div id="button-section"><button id="not-avail-button">SCHED Login</button></div></div>';
                                 
-                    document.getElementById("physician-results-" + x).insertAdjacentHTML('beforeend', info);
+                        document.getElementById("locations").insertAdjacentHTML('beforeend', info);
+                    }
+                    else {
+                        var info = '<div class="location" id="right-side"><div id="location-info"><p>' + jsonObject.location[y].address1 + '<br>' + jsonObject.location[y].address2 + '<br>' + 
+                        jsonObject.location[y].city + ', ' + jsonObject.location[y].state + ' ' + jsonObject.location[y].zip + '</p><br><p><strong>Phone: </strong>' + 
+                        jsonObject.location[y].phone + '<br><strong>Fax: </strong>' + jsonObject.location[y].fax + '</p></div><div id="button-section"><button id="buttons" onclick="launchWindows(\'https://chsli.org\', \'https://mercymedicalcenter.chsli.org/\');">SCHED Login</button></div></div>';
+                                
+                        document.getElementById("locations").insertAdjacentHTML('beforeend', info);
+                    }
                 }
                 // otherwise, list the physician and the location
                 else {
-                    var info = '<div class="physician-listing"><div id="physician-results-' + x + '"><section id="top-header"><div id="name-specialty"><div class="buttons"><button id="buttons" onclick="launchWindows(\'https://www.chsli.org\', \'https://mercymedicalcenter.chsli.org/\');">SCHED Login</button></div><h3>' + jsonObject.firstname + ' ' + jsonObject.lastname + ', ' +  jsonObject.title + '</h3><br><h5>' + jsonObject.specialty + '</h5></div></section></div><div class="location" id="right-side"><p>' + 
-                    jsonObject.location[y].address1 + '<br>' + jsonObject.location[y].address2 + '<br>' + jsonObject.location[y].city + ', ' + jsonObject.location[y].state + ' ' + jsonObject.location[y].zip + '</p><br><p><strong>Phone: </strong>' + jsonObject.location[y].phone + 
-                    '<br><strong>Fax: </strong>' + jsonObject.location[y].fax + '</p></div></div></div>';
-                            
-                    document.getElementById("search-results-section").insertAdjacentHTML('beforeend', info);
+                    if (jsonObjectLoc.emrLink == "" && jsonObjectLoc.emrDocLink == "") {
+                        var info = '<div class="physician-listing"><div id="physician-results-' + x + '"><section id="top-header"><div id="name-specialty"><h3>' + jsonObject.firstname + ' ' + jsonObject.lastname + ', ' +  jsonObject.title + '</h3><br><h5>' + jsonObject.specialty + '</h5></div></section><div id="locations"><div class="location" id="right-side"><div id="location-info"><p>' + 
+                        jsonObjectLoc.address1 + '<br>' + jsonObjectLoc.address2 + '<br>' + jsonObjectLoc.city + ', ' + jsonObjectLoc.state + ' ' + jsonObjectLoc.zip + '</p><br><p><strong>Phone: </strong>' + jsonObjectLoc.phone + 
+                        '<br><strong>Fax: </strong>' + jsonObjectLoc.fax + '</p></div><div id="button-section"><button id="not-avail-button">SCHED Login</button></div></div></div></div></div>';
+                        
+                        document.getElementById("search-results-section").insertAdjacentHTML('beforeend', info);
+                    }
+                    else {
+                        var info = '<div class="physician-listing"><div id="physician-results-' + x + '"><section id="top-header"><div id="name-specialty"><h3>' + jsonObject.firstname + ' ' + jsonObject.lastname + ', ' +  jsonObject.title + '</h3><br><h5>' + jsonObject.specialty + '</h5></div></section><div id="locations"><div class="location" id="right-side"><div id="location-info"><p>' + 
+                        jsonObjectLoc.address1 + '<br>' + jsonObjectLoc.address2 + '<br>' + jsonObjectLoc.city + ', ' + jsonObjectLoc.state + ' ' + jsonObjectLoc.zip + '</p><br><p><strong>Phone: </strong>' + jsonObjectLoc.phone + 
+                        '<br><strong>Fax: </strong>' + jsonObjectLoc.fax + '</p></div><div id="button-section"><button id="buttons" onclick="launchWindows(\'https://chsli.org\', \'https://mercymedicalcenter.chsli.org/\');">SCHED Login</button></div></div></div></div></div>';
+                        
+                        document.getElementById("search-results-section").insertAdjacentHTML('beforeend', info);
+                    }
                 }
             }
         }

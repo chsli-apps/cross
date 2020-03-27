@@ -1,0 +1,126 @@
+[{
+	"runDateTime": "2020-03-11",
+	"providerData": [{
+			"npi": "915381212",
+			"lastname": "Herman",
+			"firstname": "Trujillo",
+			"title": "MD", 
+			"specialty": "Allergy and Immunology",
+			"loyalty": "",
+			"location": [{
+				"address1": "ENTROFLEX",
+				"address2": "962 Greenwood Avenue",
+				"city": "Groveville",
+				"state": "Idaho",
+				"zip": "22749",
+				"phone": "(943) 573-2339",
+				"fax": "(892) 523-2065",
+				"lat": "-48.822381",
+                "lon": "-85.45668",
+                "emrLink": "https://www.chsli.org",
+                "emrDocLink": "https://mercymedicalcenter.chsli.org/"
+			}]
+		},{
+			"npi": "1111111111",
+			"lastname": "Schwartz",
+			"firstname": "Schmidt",
+			"title": "MD",
+			"specialty": "Allergy and Immunology",
+			"loyalty": "",
+			"location": [{
+				"address1": "ENTROFLEX",
+				"address2": "962 Greenwood Avenue",
+				"city": "Groveville",
+				"state": "Idaho",
+				"zip": "22749",
+				"phone": "(943) 573-2339",
+				"fax": "(892) 523-2065",
+				"lat": "-48.822381",
+                "lon": "-85.45668",
+                "emrLink": "",
+			    "emrDocLink": ""
+			}]
+		},
+		{
+			"npi": "847784551",
+			"lastname": "Randolph",
+			"firstname": "Joyce",
+			"title": "MD",
+			"specialty": "MOHS Surgery, Orthopedic Surgery",
+			"loyalty": "",
+			"location": [{
+					"address1": "UNISURE",
+					"address2": "101 Losee Terrace",
+					"city": "Fairacres",
+					"state": "Maryland",
+					"zip": "84888",
+					"phone": "(800) 444-2241",
+					"fax": "(925) 451-2338",
+					"lat": "-78.198337",
+                    "lon": "153.935113",
+                    "emrLink": "",
+			        "emrDocLink": ""
+				},
+				{
+					"address1": "TRASOLA",
+					"address2": "774 Otsego Street",
+					"city": "Lund",
+					"state": "Hawaii",
+					"zip": "89800",
+					"phone": "(919) 533-2469",
+					"fax": "(900) 588-3560",
+					"lat": "-21.118073",
+                    "lon": "109.076097",
+                    "emrLink": "",
+			        "emrDocLink": ""
+				}
+			]
+		},
+		{
+			"npi": "216440035",
+			"lastname": "Lott",
+			"firstname": "Vaughan",
+			"title": "MD",
+			"specialty": "Hematology",
+			"loyalty":"",
+			"location": [{
+					"address1": "TRASOLA",
+					"address2": "787 Woodhull Street",
+					"city": "Tuskahoma",
+					"state": "Alaska",
+					"zip": "16067",
+					"phone": "(880) 424-3820",
+					"fax": "(958) 554-3056",
+					"lat": "-63.010914",
+                    "lon": "-91.907154",
+                    "emrLink": "https://www.chsli.org",
+			        "emrDocLink": "https://mercymedicalcenter.chsli.org/"
+				},
+				{
+					"address1": "OULU",
+					"address2": "228 Gardner Avenue",
+					"city": "Guthrie",
+					"state": "Vermont",
+					"zip": "66899",
+					"phone": "(899) 434-3104",
+					"fax": "(897) 483-3825",
+					"lat": "67.968134",
+                    "lon": "-98.251667",
+                    "emrLink": "https://www.chsli.org",
+			        "emrDocLink": "https://mercymedicalcenter.chsli.org/"
+				},
+				{
+					"address1": "RECOGNIA",
+					"address2": "615 Grant Avenue",
+					"city": "Longoria",
+					"state": "Minnesota",
+					"zip": "54471",
+					"phone": "(926) 473-3397",
+					"fax": "(978) 501-3140",
+					"lat": "-43.105188",
+                    "lon": "106.707109",
+                    "emrLink": "https://www.chsli.org",
+			        "emrDocLink": "https://mercymedicalcenter.chsli.org/"
+				}]
+		}]
+}]
