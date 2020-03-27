@@ -7,6 +7,7 @@ var jsonData = "";
 var autoCompleteWords = [];
 var filteredAutoCompleteWords = [];
 var providerOnlyData = "";
+var providerOnlyAutoComplete = [];
 
 function loadJSON(callback) {
     var xmlObj = new XMLHttpRequest();
@@ -27,14 +28,22 @@ function init() {
         var providerData = jsonData[0].providerData; // -> uncomment when mock data is updated to include providerData identifier
         for (var x = 0; x < providerData.length; x++) { // change to providerData when updated
             var jsonObject = providerData[x];   // change to providerInfo when updated
-            if (!autoCompleteWords.includes("start " + jsonObject.firstname[0] + " physicianName && " + jsonObject.firstname + " " + jsonObject.lastname)) { //&& !autoCompleteWords.includes("start " + jsonObject.lastname[0] + " physicianName && " + jsonObject.lastname + ", " + jsonObject.firstname)) {
+            if (!autoCompleteWords.includes("start " + jsonObject.firstname[0] + " " + jsonObject.lastname[0] + " physicianName && " + jsonObject.firstname + " " + jsonObject.lastname)) {
                 autoCompleteWords.push("start " + jsonObject.firstname[0] + " " + jsonObject.lastname[0] + " physicianName && " + jsonObject.firstname + " " + jsonObject.lastname);
-                //autoCompleteWords.push("start " + jsonObject.lastname[0] + " physicianName && " + jsonObject.lastname + ", " + jsonObject.firstname);
+                
             }
             for (var y = 0; y < jsonObject.location.length; y++) {
                 jsonObjectLoc = jsonObject.location[y];
                 if (!autoCompleteWords.includes("start " + jsonObjectLoc.address1[0] + " - practiceName && " + jsonObjectLoc.address1)) {
                     autoCompleteWords.push("start " + jsonObjectLoc.address1[0] + " - practiceName && " + jsonObjectLoc.address1);
+                }
+                if (jsonObjectLoc.emrLink != "" && jsonObjectLoc.emrDocLink != "") {
+                    if (!providerOnlyAutoComplete.includes("start " + jsonObject.firstname[0] + " " + jsonObject.lastname[0] +" physicianName && " + jsonObject.firstname + " " + jsonObject.lastname)) {
+                        providerOnlyAutoComplete.push("start " + jsonObject.firstname[0] + " " + jsonObject.lastname[0] + " physicianName && " + jsonObject.firstname + " " + jsonObject.lastname);
+                    }
+                    if (!providerOnlyAutoComplete.includes("start " + jsonObjectLoc.address1[0] + " - practiceName && " + jsonObjectLoc.address1)) {
+                        providerOnlyAutoComplete.push("start " + jsonObjectLoc.address1[0] + " - practiceName && " + jsonObjectLoc.address1);
+                    }
                 }
             }
         }
@@ -46,6 +55,9 @@ init();
 function autocomplete(inp, arr) {
     // the autocomplete function takes two arguments, the text field element and an array of possible autocompleted values
     var currentSelection;
+    if (inp.value == "") {
+        closeAllLists();
+    }
     inp.addEventListener("input", function(e) {
         var a, b, i, val = this.value;
         closeAllLists();
@@ -58,7 +70,12 @@ function autocomplete(inp, arr) {
         this.parentNode.appendChild(a);
 
         if (this.value.length == 1) {
-            arr = filterAutoCompleteWords(this.value);
+            if (document.getElementById("providers-only").checked) {
+                arr = filterAutoCompleteWords(this.value, providerOnlyAutoComplete);
+            }
+            else {
+                arr = filterAutoCompleteWords(this.value, autoCompleteWords);
+            }
         }
 
         if (this.value.length >= 3){
@@ -216,19 +233,20 @@ function autocomplete(inp, arr) {
     }
 }
 
-function filterAutoCompleteWords(start) {
+function filterAutoCompleteWords(start, autoCompleteArray) {
     filteredAutoCompleteWords = [];
-    for (var s = 0; s < autoCompleteWords.length; s++) {
-        var firstNameStart = autoCompleteWords[s].charAt(6);
-        var lastNameStart = autoCompleteWords[s].charAt(8);
+    for (var s = 0; s < autoCompleteArray.length; s++) {
+        var firstNameStart = autoCompleteArray[s].charAt(6);
+        var lastNameStart = autoCompleteArray[s].charAt(8);
         if (start.toUpperCase() == firstNameStart.toUpperCase() || start.toUpperCase() == lastNameStart.toUpperCase()) {
-            filteredAutoCompleteWords.push(autoCompleteWords[s]);
+            filteredAutoCompleteWords.push(autoCompleteArray[s]);
         }
     }
     return filteredAutoCompleteWords;
 }
 
 function searchbar() {
+    document.getElementById("search").value = "";
     autocomplete(document.getElementById("search"), autoCompleteWords);
 }
     
@@ -298,7 +316,9 @@ function triggerSearch(nodeVal){
     
     var numFound = document.getElementById("search-results-section").getElementsByClassName("physician-listing").length;
     if (numFound === 0) {
+        document.getElementById("search-results-section").style.textAlign = "center";
         document.getElementById("search-results-section").insertAdjacentHTML('beforeend', '<p id="no-results">Your search returned no results.</p>');
+    
     }
     else {
         // add header

@@ -93,8 +93,8 @@
 					"fax": "(958) 554-3056",
 					"lat": "-63.010914",
                     "lon": "-91.907154",
-                    "emrLink": "https://www.chsli.org",
-			        "emrDocLink": "https://mercymedicalcenter.chsli.org/"
+                    "emrLink": "",
+			        "emrDocLink": ""
 				},
 				{
 					"address1": "OULU",
