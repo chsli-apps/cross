@@ -69,6 +69,7 @@ function autocomplete(inp, arr) {
         a.setAttribute("class", "autocomplete-items");
         this.parentNode.appendChild(a);
 
+        // if the providers only is checked, only show provider only options in dropdown
         if (this.value.length == 1) {
             if (document.getElementById("providers-only").checked) {
                 arr = filterAutoCompleteWords(this.value, providerOnlyAutoComplete);
