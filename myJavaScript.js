@@ -28,20 +28,20 @@ function init() {
         var providerData = jsonData[0].providerData; // -> uncomment when mock data is updated to include providerData identifier
         for (var x = 0; x < providerData.length; x++) { // change to providerData when updated
             var jsonObject = providerData[x];   // change to providerInfo when updated
-            if (!autoCompleteWords.indexOf("start " + jsonObject.firstname[0] + " " + jsonObject.lastname[0] + " physicianName && " + jsonObject.firstname + " " + jsonObject.lastname) != -1) {
+            if (autoCompleteWords.indexOf("start " + jsonObject.firstname[0] + " " + jsonObject.lastname[0] + " physicianName && " + jsonObject.firstname + " " + jsonObject.lastname) == -1) {
                 autoCompleteWords.push("start " + jsonObject.firstname[0] + " " + jsonObject.lastname[0] + " physicianName && " + jsonObject.firstname + " " + jsonObject.lastname);
                 
             }
             for (var y = 0; y < jsonObject.location.length; y++) {
                 jsonObjectLoc = jsonObject.location[y];
-                if (!autoCompleteWords.indexOf("start " + jsonObjectLoc.address1[0] + " - practiceName && " + jsonObjectLoc.address1) != -1) {
+                if (autoCompleteWords.indexOf("start " + jsonObjectLoc.address1[0] + " - practiceName && " + jsonObjectLoc.address1) == -1) {
                     autoCompleteWords.push("start " + jsonObjectLoc.address1[0] + " - practiceName && " + jsonObjectLoc.address1);
                 }
                 if (jsonObjectLoc.emrLink != "" && jsonObjectLoc.emrDocLink != "") {
-                    if (!providerOnlyAutoComplete.indexOf("start " + jsonObject.firstname[0] + " " + jsonObject.lastname[0] +" physicianName && " + jsonObject.firstname + " " + jsonObject.lastname) != -1) {
+                    if (providerOnlyAutoComplete.indexOf("start " + jsonObject.firstname[0] + " " + jsonObject.lastname[0] +" physicianName && " + jsonObject.firstname + " " + jsonObject.lastname) == -1) {
                         providerOnlyAutoComplete.push("start " + jsonObject.firstname[0] + " " + jsonObject.lastname[0] + " physicianName && " + jsonObject.firstname + " " + jsonObject.lastname);
                     }
-                    if (!providerOnlyAutoComplete.indexOf("start " + jsonObjectLoc.address1[0] + " - practiceName && " + jsonObjectLoc.address1) != -1) {
+                    if (providerOnlyAutoComplete.indexOf("start " + jsonObjectLoc.address1[0] + " - practiceName && " + jsonObjectLoc.address1) == -1) {
                         providerOnlyAutoComplete.push("start " + jsonObjectLoc.address1[0] + " - practiceName && " + jsonObjectLoc.address1);
                     }
                 }
