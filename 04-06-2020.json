@@ -4270,8 +4270,8 @@
 			"ZIP": "",
 			"state": "",
 			"Practice": "SightMD",
-			"emrLink": "https://www.chsli.org",
-			"emrDoc": "https://mercymedicalcenter.chsli.org/"
+			"emrLink": "emrLink",
+			"emrDoc": "emrDoc"
 		}]
 	}, {
 		"NPI": "1134188352",
