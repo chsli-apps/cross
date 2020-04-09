@@ -21,7 +21,7 @@ function loadJSON(callback) {
     xmlObj.send(null);
   }
   
-function init() {
+  function init() {
     loadJSON( function(response) {
         jsonData = JSON.parse(response);
         document.getElementById("last-updated-data").insertAdjacentText('afterbegin', 'Data Last Updated: ' + jsonData[0].runDateTime);
@@ -36,15 +36,19 @@ function init() {
                 jsonObjectLoc = jsonObject.Location[y];
                 console.log(jsonObjectLoc);
                 if (jsonObjectLoc.Practice != undefined) {
-                    if (autoCompleteWords.indexOf("start " + jsonObjectLoc.Practice.charAt(0) + " - practiceName && " + jsonObjectLoc.Practice) == -1) {
-                        autoCompleteWords.push("start " + jsonObjectLoc.Practice.charAt(0) + " - practiceName && " + jsonObjectLoc.Practice);
+                    var starts = [];
+                    var split = jsonObjectLoc.Practice.split(" ");
+                    split.forEach(element => {starts.push(element.charAt(0));});
+                    var stringStarts = starts.toString();
+                    if (autoCompleteWords.indexOf("start[" + stringStarts + "] practiceName && " + jsonObjectLoc.Practice) == -1) {
+                        autoCompleteWords.push("start[" + stringStarts + "] practiceName && " + jsonObjectLoc.Practice);
                     }
                     if (jsonObjectLoc.emrLink != "emrLink" && jsonObjectLoc.emrDoc != "emrDoc") {
                         if (providerOnlyAutoComplete.indexOf("start " + jsonObject.FirstName.charAt(0) + " " + jsonObject.LastName.charAt(0) +" physicianName && " + jsonObject.FirstName + " " + jsonObject.LastName) == -1) {
                             providerOnlyAutoComplete.push("start " + jsonObject.FirstName.charAt(0) + " " + jsonObject.LastName.charAt(0) + " physicianName && " + jsonObject.FirstName + " " + jsonObject.LastName);
                         }
-                        if (providerOnlyAutoComplete.indexOf("start " + jsonObjectLoc.Practice.charAt(0) + " - practiceName && " + jsonObjectLoc.Practice) == -1) {
-                            providerOnlyAutoComplete.push("start " + jsonObjectLoc.Practice.charAt(0) + " - practiceName && " + jsonObjectLoc.Practice);
+                        if (providerOnlyAutoComplete.indexOf("start[" + stringStarts + "] practiceName && " + jsonObjectLoc.Practice) == -1) {
+                            providerOnlyAutoComplete.push("start[" + stringStarts + "] practiceName && " + jsonObjectLoc.Practice);
                         }
                     }
                 }
@@ -98,104 +102,25 @@ function autocomplete(inp, arr) {
                 var removeBeg = arr[i].substr(ampLocation + 3, arr[i].length);
                 var splitWords = removeBeg.split(" ");
                 var lastWord = splitWords[splitWords.length - 1];
-                var searchByKey = arr[i].substring(10, ampLocation-1);
-
-                // if first and last word are not the same but start with same letters
-                if (lastWord != splitWords[0] && removeBeg.substr(0, val.length).toUpperCase() === val.toUpperCase() && lastWord.substr(0, val.length).toUpperCase() === val.toUpperCase()) {
-                    b = document.createElement("DIV");
-                    b.setAttribute("id", "list-item");
-                    // make the matching letters bold
-                    b.innerHTML = "<strong>" + removeBeg.substr(0, val.length) + "</strong>";
-                    b.innerHTML += removeBeg.substring(val.length, removeBeg.length - lastWord.length);
-                    b.innerHTML += "<strong>" + lastWord.substr(0, val.length) + "</strong>";
-                    b.innerHTML += lastWord.substr(val.length);
-                    b.innerHTML += "<input type='hidden' value='" + arr[i] + "' id='" + arr[i] + "'>";
-                    b.addEventListener("click", function(e) {
-                        // insert the value to autocomplete list
-                        var inputData = this.getElementsByTagName("input")[0].value;
-                        var ampLoc = inputData.indexOf("&&");
-                        var removeBegin = inputData.substr(ampLoc + 3, inputData.length);
-                        inp.value = removeBegin;
-                        aa = document.getElementById("hidden-info");
-                        aa.innerHTML = "<input type='hidden' id='myInput' value='" + this.getElementsByTagName("input")[0].value + "'>";
-                        triggerSearch(document.getElementById("search"));
-    
-                        closeAllLists();
-                    });
-                    if (searchByKey == "practiceName") {
-                        z.appendChild(b);
-                    }
-                    else if (searchByKey == "physicianName") {
-                        y.appendChild(b);
-                    }
+                if (arr[i].indexOf("start[") == -1) {
+                    var searchByKey = arr[i].substring(10, ampLocation-1);
+                }
+                else {
+                    var searchByKey = arr[i].substring(arr[i].indexOf("]") + 2, ampLocation-1);
                 }
 
-                // if last word is the same as the first word because only one word
-                else if (lastWord === splitWords[0] && splitWords.length != 1 && removeBeg.substr(0, val.length).toUpperCase() === val.toUpperCase() && lastWord.substr(0, val.length).toUpperCase() === val.toUpperCase()) {
+                for (var x = 0; x < splitWords.length; x++) {
+                    var element = splitWords[x];
                     b = document.createElement("DIV");
                     b.setAttribute("id", "list-item");
-                    // make the matching letters bold
-                    b.innerHTML = "<strong>" + removeBeg.substr(0, val.length) + "</strong>";
-                    b.innerHTML += removeBeg.substring(val.length, removeBeg.length - lastWord.length);
-                    b.innerHTML += "<strong>" + lastWord.substr(0, val.length) + "</strong>";
-                    b.innerHTML += lastWord.substr(val.length);
-                    b.innerHTML += "<input type='hidden' value='" + arr[i] + "' id='" + arr[i] + "'>";
-                    b.addEventListener("click", function(e) {
-                        // insert the value to autocomplete list
-                        var inputData = this.getElementsByTagName("input")[0].value;
-                        var ampLoc = inputData.indexOf("&&");
-                        var removeBegin = inputData.substr(ampLoc + 3, inputData.length);
-                        inp.value = removeBegin;
-                        aa = document.getElementById("hidden-info");
-                        aa.innerHTML = "<input type='hidden' id='myInput' value='" + this.getElementsByTagName("input")[0].value + "'>";
-                        triggerSearch(document.getElementById("search"));
-    
-                        closeAllLists();
-                    });
-                    if (searchByKey == "practiceName") {
-                        z.appendChild(b);
-                    }
-                    else if (searchByKey == "physicianName") {
-                        y.appendChild(b);
-                    }
-                }
-
-                // if the beginning of the word matches what is being typed in
-                else if (removeBeg.substr(0, val.length).toUpperCase() === val.toUpperCase()) {
-                    b = document.createElement("DIV");
-                    b.setAttribute("id", "list-item");
-                    // make the matching letters bold
-                    b.innerHTML = "<strong>" + removeBeg.substr(0, val.length) + "</strong>";
-                    b.innerHTML += removeBeg.substr(val.length);
-                    b.innerHTML += "<input type='hidden' value='" + arr[i] + "' id='" + arr[i] + "'>";
-                    b.addEventListener("click", function(e) {
-                        // insert the value to autocomplete list
-                        var inputData = this.getElementsByTagName("input")[0].value;
-                        var ampLoc = inputData.indexOf("&&");
-                        var removeBegin = inputData.substr(ampLoc + 3, inputData.length);
-                        inp.value = removeBegin;
-                        aa = document.getElementById("hidden-info");
-                        aa.innerHTML = "<input type='hidden' id='myInput' value='" + this.getElementsByTagName("input")[0].value + "'>";
-                        triggerSearch(document.getElementById("search"));
-    
-                        closeAllLists();
-                    });
-                    if (searchByKey == "practiceName") {
-                        z.appendChild(b);
-                    }
-                    else if (searchByKey == "physicianName") {
-                        y.appendChild(b);
-                    }
-                }
-                
-                // if the second word starts with what is being typed in search bar
-                else if (lastWord != splitWords[0] && document.getElementById("'" + arr[i] + "'") == null) {
-                    if (lastWord.substr(0, val.length).toUpperCase() === val.toUpperCase()) {
-                        b = document.createElement("DIV");
-                        b.setAttribute("id", "list-item");
-                        // make the matching letters bold
-                        b.innerHTML = removeBeg.substring(0, removeBeg.length - lastWord.length) + " " + "<strong>" + lastWord.substr(0, val.length) + "</strong>";
-                        b.innerHTML += lastWord.substr(val.length);
+                    b.innerHTML = "";
+                    if (element.substr(0, val.length).toUpperCase() == val.toUpperCase() && b.innerHTML == "") {
+                        if (x == 0) {
+                            b.innerHTML = "<strong>" + element.substr(0, val.length) + "</strong>" + element.substr(val.length) + " " + splitWords.splice(1).toString().replace(/,/g, " ");
+                        }
+                        else {
+                            b.innerHTML = splitWords.splice(0, x).toString().replace(/,/g, " ") + " " + "<strong>" + element.substr(0, val.length) + "</strong>" + element.substr(val.length) + " " + splitWords.splice(x).toString().replace(/,/g, " ");
+                        }
                         b.innerHTML += "<input type='hidden' value='" + arr[i] + "' id='" + arr[i] + "'>";
                         b.addEventListener("click", function(e) {
                             // insert the value to autocomplete list
@@ -217,6 +142,125 @@ function autocomplete(inp, arr) {
                         }
                     }
                 }
+
+
+                // if first and last word are not the same but start with same letters
+                // if (lastWord != splitWords[0] && removeBeg.substr(0, val.length).toUpperCase() === val.toUpperCase() && lastWord.substr(0, val.length).toUpperCase() === val.toUpperCase()) {
+                //     b = document.createElement("DIV");
+                //     b.setAttribute("id", "list-item");
+                //     // make the matching letters bold
+                //     b.innerHTML = "<strong>" + removeBeg.substr(0, val.length) + "</strong>";
+                //     b.innerHTML += removeBeg.substring(val.length, removeBeg.length - lastWord.length);
+                //     b.innerHTML += "<strong>" + lastWord.substr(0, val.length) + "</strong>";
+                //     b.innerHTML += lastWord.substr(val.length);
+                //     b.innerHTML += "<input type='hidden' value='" + arr[i] + "' id='" + arr[i] + "'>";
+                //     b.addEventListener("click", function(e) {
+                //         // insert the value to autocomplete list
+                //         var inputData = this.getElementsByTagName("input")[0].value;
+                //         var ampLoc = inputData.indexOf("&&");
+                //         var removeBegin = inputData.substr(ampLoc + 3, inputData.length);
+                //         inp.value = removeBegin;
+                //         aa = document.getElementById("hidden-info");
+                //         aa.innerHTML = "<input type='hidden' id='myInput' value='" + this.getElementsByTagName("input")[0].value + "'>";
+                //         triggerSearch(document.getElementById("search"));
+    
+                //         closeAllLists();
+                //     });
+                //     if (searchByKey == "practiceName") {
+                //         z.appendChild(b);
+                //     }
+                //     else if (searchByKey == "physicianName") {
+                //         y.appendChild(b);
+                //     }
+                // }
+
+                // // if last word is the same as the first word because only one word
+                // else if (lastWord === splitWords[0] && splitWords.length != 1 && removeBeg.substr(0, val.length).toUpperCase() === val.toUpperCase() && lastWord.substr(0, val.length).toUpperCase() === val.toUpperCase()) {
+                //     b = document.createElement("DIV");
+                //     b.setAttribute("id", "list-item");
+                //     // make the matching letters bold
+                //     b.innerHTML = "<strong>" + removeBeg.substr(0, val.length) + "</strong>";
+                //     b.innerHTML += removeBeg.substring(val.length, removeBeg.length - lastWord.length);
+                //     b.innerHTML += "<strong>" + lastWord.substr(0, val.length) + "</strong>";
+                //     b.innerHTML += lastWord.substr(val.length);
+                //     b.innerHTML += "<input type='hidden' value='" + arr[i] + "' id='" + arr[i] + "'>";
+                //     b.addEventListener("click", function(e) {
+                //         // insert the value to autocomplete list
+                //         var inputData = this.getElementsByTagName("input")[0].value;
+                //         var ampLoc = inputData.indexOf("&&");
+                //         var removeBegin = inputData.substr(ampLoc + 3, inputData.length);
+                //         inp.value = removeBegin;
+                //         aa = document.getElementById("hidden-info");
+                //         aa.innerHTML = "<input type='hidden' id='myInput' value='" + this.getElementsByTagName("input")[0].value + "'>";
+                //         triggerSearch(document.getElementById("search"));
+    
+                //         closeAllLists();
+                //     });
+                //     if (searchByKey == "practiceName") {
+                //         z.appendChild(b);
+                //     }
+                //     else if (searchByKey == "physicianName") {
+                //         y.appendChild(b);
+                //     }
+                // }
+
+                // // if the beginning of the word matches what is being typed in
+                // else if (removeBeg.substr(0, val.length).toUpperCase() === val.toUpperCase()) {
+                //     b = document.createElement("DIV");
+                //     b.setAttribute("id", "list-item");
+                //     // make the matching letters bold
+                //     b.innerHTML = "<strong>" + removeBeg.substr(0, val.length) + "</strong>";
+                //     b.innerHTML += removeBeg.substr(val.length);
+                //     b.innerHTML += "<input type='hidden' value='" + arr[i] + "' id='" + arr[i] + "'>";
+                //     b.addEventListener("click", function(e) {
+                //         // insert the value to autocomplete list
+                //         var inputData = this.getElementsByTagName("input")[0].value;
+                //         var ampLoc = inputData.indexOf("&&");
+                //         var removeBegin = inputData.substr(ampLoc + 3, inputData.length);
+                //         inp.value = removeBegin;
+                //         aa = document.getElementById("hidden-info");
+                //         aa.innerHTML = "<input type='hidden' id='myInput' value='" + this.getElementsByTagName("input")[0].value + "'>";
+                //         triggerSearch(document.getElementById("search"));
+    
+                //         closeAllLists();
+                //     });
+                //     if (searchByKey == "practiceName") {
+                //         z.appendChild(b);
+                //     }
+                //     else if (searchByKey == "physicianName") {
+                //         y.appendChild(b);
+                //     }
+                // }
+                
+                // // if the second word starts with what is being typed in search bar
+                // else if (lastWord != splitWords[0] && document.getElementById("'" + arr[i] + "'") == null) {
+                //     if (lastWord.substr(0, val.length).toUpperCase() === val.toUpperCase()) {
+                //         b = document.createElement("DIV");
+                //         b.setAttribute("id", "list-item");
+                //         // make the matching letters bold
+                //         b.innerHTML = removeBeg.substring(0, removeBeg.length - lastWord.length) + " " + "<strong>" + lastWord.substr(0, val.length) + "</strong>";
+                //         b.innerHTML += lastWord.substr(val.length);
+                //         b.innerHTML += "<input type='hidden' value='" + arr[i] + "' id='" + arr[i] + "'>";
+                //         b.addEventListener("click", function(e) {
+                //             // insert the value to autocomplete list
+                //             var inputData = this.getElementsByTagName("input")[0].value;
+                //             var ampLoc = inputData.indexOf("&&");
+                //             var removeBegin = inputData.substr(ampLoc + 3, inputData.length);
+                //             inp.value = removeBegin;
+                //             aa = document.getElementById("hidden-info");
+                //             aa.innerHTML = "<input type='hidden' id='myInput' value='" + this.getElementsByTagName("input")[0].value + "'>";
+                //             triggerSearch(document.getElementById("search"));
+        
+                //             closeAllLists();
+                //         });
+                //         if (searchByKey == "practiceName") {
+                //             z.appendChild(b);
+                //         }
+                //         else if (searchByKey == "physicianName") {
+                //             y.appendChild(b);
+                //         }
+                //     }
+                // }
             }
             if (document.getElementById("list-physician").childElementCount
             + document.getElementById("list-location").childElementCount > 6 ) {
@@ -305,10 +349,25 @@ function autocomplete(inp, arr) {
 function filterAutoCompleteWords(start, autoCompleteArray) {
     filteredAutoCompleteWords = [];
     for (var s = 0; s < autoCompleteArray.length; s++) {
-        var firstNameStart = autoCompleteArray[s].charAt(6);
-        var lastNameStart = autoCompleteArray[s].charAt(8);
-        if (start.toUpperCase() == firstNameStart.toUpperCase() || start.toUpperCase() == lastNameStart.toUpperCase()) {
-            filteredAutoCompleteWords.push(autoCompleteArray[s]);
+        var selected = autoCompleteArray[s];
+        if (selected.indexOf("start[") != -1) {
+            var endBracket = selected.indexOf("]");
+            var practiceStarts = selected.substring(selected.indexOf("[") + 1, endBracket);
+
+            var splitStarts = practiceStarts.split(",");
+            splitStarts.forEach(element => {
+                if (element.toUpperCase() == start.toUpperCase() && filteredAutoCompleteWords.indexOf(selected) == -1){
+                    filteredAutoCompleteWords.push(selected);
+                }
+            });
+        }
+        else {
+            var firstNameStart = autoCompleteArray[s].charAt(6);
+            var lastNameStart = autoCompleteArray[s].charAt(8);
+            
+            if ((start.toUpperCase() == firstNameStart.toUpperCase() || start.toUpperCase() == lastNameStart.toUpperCase())  && filteredAutoCompleteWords.indexOf(selected) == -1) {
+                filteredAutoCompleteWords.push(autoCompleteArray[s]);
+            }
         }
     }
     return filteredAutoCompleteWords;
@@ -372,7 +431,12 @@ function triggerSearch(nodeVal){
     if (a != null) {
         var nodeValue = nodeVal.value;
         var ampLoc = a.value.indexOf("&&");
-        var searchByKey = a.value.substring(10, ampLoc-1);
+        if (a.value.indexOf("start[") == -1) {
+            var searchByKey = a.value.substring(10, ampLoc-1);
+        }
+        else {
+            var searchByKey = a.value.substring(a.value.indexOf("]") + 2, ampLoc-1);
+        }
         // search based on the search key code
     
         if (searchByKey === "physicianName") {
