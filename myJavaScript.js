@@ -221,6 +221,7 @@ function autocomplete(inp, arr) {
             if (document.getElementById("list-physician").childElementCount
             + document.getElementById("list-location").childElementCount > 6 ) {
                 document.getElementById("searchautocomplete-list").style.overflowY = 'scroll';
+                document.getElementById("searchautocomplete-list").style.height = '245px';
             }
             if (document.getElementById("list-item") == null) {
                 a.removeChild(y);
