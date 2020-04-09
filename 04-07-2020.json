@@ -22,48 +22,6 @@
 			"emrDoc": "emrDoc"
 		}]
 	}, {
-		"NPI": "1003048927",
-		"Prov_name": "Reese, Maureen",
-		"LastName": "ALLAN2",
-		"FirstName": "Maureen",
-		"Degree": "PA",
-		"Title": "PA",
-		"specialty": "Allergy",
-		"loyalty": "Tier1",
-		"Location": [{
-			"Department_name": "ALLERGY ASTHMA CARE LI",
-			"Phone": "(516) 536-7336",
-			"Fax": "(516) 536-7650",
-			"Address": "242 Merrick Rd Ste 401",
-			"City": "Rockville Ctr",
-			"ZIP": "11570",
-			"state": "NY",
-			"Practice": "ALLERGY ASTHMA CARE LI",
-			"emrLink": "emrLink",
-			"emrDoc": "emrDoc"
-		}]
-	},  {
-		"NPI": "1003048927",
-		"Prov_name": "Reese, Maureen",
-		"LastName": "ALLAN1",
-		"FirstName": "Maureen",
-		"Degree": "PA",
-		"Title": "PA",
-		"specialty": "Allergy",
-		"loyalty": "Tier1",
-		"Location": [{
-			"Department_name": "ALLERGY ASTHMA CARE LI",
-			"Phone": "(516) 536-7336",
-			"Fax": "(516) 536-7650",
-			"Address": "242 Merrick Rd Ste 401",
-			"City": "Rockville Ctr",
-			"ZIP": "11570",
-			"state": "NY",
-			"Practice": "ALLERGY ASTHMA CARE LI",
-			"emrLink": "emrLink",
-			"emrDoc": "emrDoc"
-		}]
-	}, {
 		"NPI": "1003089673",
 		"Prov_name": "Davidoff, Sam",
 		"LastName": "Davidoff",
