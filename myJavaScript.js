@@ -34,11 +34,12 @@ function loadJSON(callback) {
             }
             for (var y = 0; y < jsonObject.Location.length; y++) {
                 jsonObjectLoc = jsonObject.Location[y];
-                console.log(jsonObjectLoc);
                 if (jsonObjectLoc.Practice != undefined) {
                     var starts = [];
                     var split = jsonObjectLoc.Practice.split(" ");
-                    split.forEach(element => {starts.push(element.charAt(0));});
+                    for (var z = 0; z < split.length; z++) {
+                        starts.push(split[z].charAt(0));
+                    }
                     var stringStarts = starts.toString();
                     if (autoCompleteWords.indexOf("start[" + stringStarts + "] practiceName && " + jsonObjectLoc.Practice) == -1) {
                         autoCompleteWords.push("start[" + stringStarts + "] practiceName && " + jsonObjectLoc.Practice);
@@ -236,11 +237,11 @@ function filterAutoCompleteWords(start, autoCompleteArray) {
             var practiceStarts = selected.substring(selected.indexOf("[") + 1, endBracket);
 
             var splitStarts = practiceStarts.split(",");
-            splitStarts.forEach(element => {
-                if (element.toUpperCase() == start.toUpperCase() && filteredAutoCompleteWords.indexOf(selected) == -1){
+            for (var t = 0; t < splitStarts.length; t++) {
+                if (splitStarts[t].toUpperCase() == start.toUpperCase() && filteredAutoCompleteWords.indexOf(selected) == -1){
                     filteredAutoCompleteWords.push(selected);
                 }
-            });
+            }
         }
         else {
             var firstNameStart = autoCompleteArray[s].charAt(6);
