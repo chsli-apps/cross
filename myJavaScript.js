@@ -12,8 +12,9 @@ var providerOnlyAutoComplete = [];
 function loadJSON(callback) {
   var xmlObj = new XMLHttpRequest();
   xmlObj.overrideMimeType("application/json");
-  xmlObj.open("GET", "04-07-2020.json");
-  xmlObj.onreadystatechange = function () {
+  // xmlObj.open("GET", "ProviderListing.json");
+  xmlObj.open("GET", "https://intranet-staging.chsli.org/sites/default/files/provider-listing/CROSSProviderListing.json");
+  xmlObj.onreadystatechange = function() {
     if (xmlObj.readyState == 4 && xmlObj.status == "200") {
       callback(xmlObj.responseText);
     }
@@ -22,7 +23,7 @@ function loadJSON(callback) {
 }
 
 function init() {
-  loadJSON(function (response) {
+  loadJSON(function(response) {
     jsonData = JSON.parse(response);
     document.getElementById("last-updated-data").insertAdjacentText("afterbegin", "Data Last Updated: " + jsonData[0].runDateTime);
     var providerData = jsonData[0].providerData; // -> uncomment when mock data is updated to include providerData identifier
@@ -70,7 +71,7 @@ function autocomplete(inp, arr) {
   if (inp.value == "") {
     closeAllLists();
   }
-  inp.addEventListener("input", function (e) {
+  inp.addEventListener("input", function(e) {
     var a,
       b,
       i,
@@ -124,20 +125,35 @@ function autocomplete(inp, arr) {
           b.innerHTML = "";
           if (element.substr(0, val.length).toUpperCase() == val.toUpperCase() && b.innerHTML == "") {
             if (x == 0) {
-              b.innerHTML = "<strong>" + element.substr(0, val.length) + "</strong>" + element.substr(val.length) + " " + splitWords.splice(1).toString().replace(/,/g, " ");
+              b.innerHTML =
+                "<strong>" +
+                element.substr(0, val.length) +
+                "</strong>" +
+                element.substr(val.length) +
+                " " +
+                splitWords
+                  .splice(1)
+                  .toString()
+                  .replace(/,/g, " ");
             } else {
               b.innerHTML =
-                splitWords.splice(0, x).toString().replace(/,/g, " ") +
+                splitWords
+                  .splice(0, x)
+                  .toString()
+                  .replace(/,/g, " ") +
                 " " +
                 "<strong>" +
                 element.substr(0, val.length) +
                 "</strong>" +
                 element.substr(val.length) +
                 " " +
-                splitWords.splice(x).toString().replace(/,/g, " ");
+                splitWords
+                  .splice(x)
+                  .toString()
+                  .replace(/,/g, " ");
             }
             b.innerHTML += "<input type='hidden' value='" + arr[i] + "' id='" + arr[i] + "'>";
-            b.addEventListener("click", function (e) {
+            b.addEventListener("click", function(e) {
               // insert the value to autocomplete list
               var inputData = this.getElementsByTagName("input")[0].value;
               var ampLoc = inputData.indexOf("&&");
@@ -172,7 +188,7 @@ function autocomplete(inp, arr) {
     }
   });
 
-  inp.addEventListener("keydown", function (e) {
+  inp.addEventListener("keydown", function(e) {
     if (currentSelection != null) {
       var x = document.getElementById(this.id + "autocomplete-list");
       if (x) x = x.getElementsByTagName("div");
@@ -304,12 +320,12 @@ function triggerSearch(nodeVal) {
   event.preventDefault();
 
   if (providerOnlyData != "") {
-    var sortedJson = providerOnlyData[0].providerData.sort(function (obj1, obj2) {
+    var sortedJson = providerOnlyData[0].providerData.sort(function(obj1, obj2) {
       return obj1.FirstName < obj2.FirstName ? -1 : 1;
     });
     providerOnlyData = "";
   } else {
-    var sortedJson = jsonData[0].providerData.sort(function (obj1, obj2) {
+    var sortedJson = jsonData[0].providerData.sort(function(obj1, obj2) {
       return obj1.FirstName < obj2.FirstName ? -1 : 1;
     });
   }
