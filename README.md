@@ -2,4 +2,4 @@
 Central Referral Office Scheduling System
 
 # URL
-https://wjakahi.github.io/cross
+https://chsli-apps.github.io/cross
