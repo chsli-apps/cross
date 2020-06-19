@@ -13,7 +13,7 @@ function loadJSON(callback) {
   var xmlObj = new XMLHttpRequest();
   xmlObj.overrideMimeType("application/json");
   // xmlObj.open("GET", "ProviderListing.json");
-  xmlObj.open("GET", "https://intranet-staging.chsli.org/sites/default/files/provider-listing/CROSSProviderListing.json");
+  xmlObj.open("GET", "https://intranet.chsli.org/provider-files.php?file=CROSSProviderListing");
   xmlObj.onreadystatechange = function() {
     if (xmlObj.readyState == 4 && xmlObj.status == "200") {
       callback(xmlObj.responseText);
